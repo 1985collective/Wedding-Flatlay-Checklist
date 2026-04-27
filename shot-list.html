@@ -777,7 +777,7 @@ cat.sections.forEach(function(sec) {
   itemsEl.className = 'section-items';
 
   sec.items.forEach(function(item) {
-    var key = page.tab + '____' + sec.title + '____' + item.text;
+    var key = page.tab + '__' + sec.title + '__' + item.text;
     var div = document.createElement('div');
     div.className = 'item';
     var promptsHtml = '';
