@@ -690,7 +690,7 @@ data.forEach(function(page) {
 page.categories.forEach(function(cat) {
 cat.sections.forEach(function(sec) {
 sec.items.forEach(function(item) {
-var key = page.tab + ‘**’ + sec.title + ’**’ + item.text;
+var key = page.tab + ‘_’ + sec.title + ’_’ + item.text;
 state[key] = false;
 totalItems++;
 });
@@ -710,7 +710,7 @@ document.getElementById(‘reset-btn’).style.display = pct === 100 ? ‘none�
 data.forEach(function(page) {
 page.categories.forEach(function(cat) {
 cat.sections.forEach(function(sec) {
-var done = sec.items.filter(function(it) { return state[page.tab + ‘**’ + sec.title + ’**’ + it.text]; }).length;
+var done = sec.items.filter(function(it) { return state[page.tab + ‘_’ + sec.title + ’_’ + it.text]; }).length;
 var el = document.getElementById(‘cnt-’ + page.tab + sec.title);
 if (el) el.textContent = done + ‘/’ + sec.items.length;
 });
