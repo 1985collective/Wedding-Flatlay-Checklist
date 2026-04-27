@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -310,60 +309,60 @@ D.forEach(function(pg){pg.cats.forEach(function(c){c.secs.forEach(function(s){s.
 function upd(){
 var n=Object.values(state).filter(Boolean).length;
 var p=Math.round(n/total*100);
-document.getElementById(“rf”).style.strokeDashoffset=163-(p/100)*163;
-document.getElementById(“pp”).textContent=p+”%”;
-document.getElementById(“pl”).textContent=n+” of “+total+” shots captured”;
-document.getElementById(“dm”).style.display=p===100?“block”:“none”;
-document.getElementById(“rb”).style.display=p===100?“none”:“inline-block”;
-D.forEach(function(pg){pg.cats.forEach(function(c){c.secs.forEach(function(s){var d=s.items.filter(function(it){return state[pg.tab+s.ti+it.t];}).length;var el=document.getElementById(“c”+pg.tab+s.ti);if(el)el.textContent=d+”/”+s.items.length;});});});
+document.getElementById("rf").style.strokeDashoffset=163-(p/100)*163;
+document.getElementById("pp").textContent=p+"%";
+document.getElementById("pl").textContent=n+" of "+total+" shots captured";
+document.getElementById("dm").style.display=p===100?"block":"none";
+document.getElementById("rb").style.display=p===100?"none":"inline-block";
+D.forEach(function(pg){pg.cats.forEach(function(c){c.secs.forEach(function(s){var d=s.items.filter(function(it){return state[pg.tab+s.ti+it.t];}).length;var el=document.getElementById("c"+pg.tab+s.ti);if(el)el.textContent=d+"/"+s.items.length;});});});
 }
 
-function toggle(key,el){state[key]=!state[key];el.classList.toggle(“done”,state[key]);upd();}
-function toggleSec(id){document.getElementById(id).classList.toggle(“closed”);}
-function switchTab(i){document.querySelectorAll(”.tab”).forEach(function(t,j){t.classList.toggle(“active”,j===i);});document.querySelectorAll(”.page”).forEach(function(p,j){p.classList.toggle(“active”,j===i);});}
-function resetAll(){Object.keys(state).forEach(function(k){state[k]=false;});document.querySelectorAll(”.item”).forEach(function(el){el.classList.remove(“done”);});upd();}
+function toggle(key,el){state[key]=!state[key];el.classList.toggle("done",state[key]);upd();}
+function toggleSec(id){document.getElementById(id).classList.toggle("closed");}
+function switchTab(i){document.querySelectorAll(".tab").forEach(function(t,j){t.classList.toggle("active",j===i);});document.querySelectorAll(".page").forEach(function(p,j){p.classList.toggle("active",j===i);});}
+function resetAll(){Object.keys(state).forEach(function(k){state[k]=false;});document.querySelectorAll(".item").forEach(function(el){el.classList.remove("done");});upd();}
 
-var tabsEl=document.getElementById(“tabs”);
+var tabsEl=document.getElementById("tabs");
 D.forEach(function(pg,i){
-var b=document.createElement(“button”);
-b.className=“tab”+(i===0?” active”:””);
+var b=document.createElement("button");
+b.className="tab"+(i===0?" active":"");
 b.textContent=pg.tab;
-b.addEventListener(“click”,function(){switchTab(i);});
+b.addEventListener("click",function(){switchTab(i);});
 tabsEl.appendChild(b);
 });
 
-var pgsEl=document.getElementById(“pages”);
+var pgsEl=document.getElementById("pages");
 D.forEach(function(pg,i){
-var pgEl=document.createElement(“div”);
-pgEl.className=“page”+(i===0?” active”:””);
-var con=document.createElement(“div”);
-con.className=“content”;
+var pgEl=document.createElement("div");
+pgEl.className="page"+(i===0?" active":"");
+var con=document.createElement("div");
+con.className="content";
 pg.cats.forEach(function(c){
-var cl=document.createElement(“div”);
-cl.className=“cat-lbl”;
+var cl=document.createElement("div");
+cl.className="cat-lbl";
 cl.textContent=c.lbl;
 con.appendChild(cl);
 c.secs.forEach(function(s){
-var sid=“s”+pg.tab+s.ti;
-var se=document.createElement(“div”);
-se.className=“sec”;
+var sid="s"+pg.tab+s.ti;
+var se=document.createElement("div");
+se.className="sec";
 se.id=sid;
-var sh=document.createElement(“div”);
-sh.className=“sec-head”;
-sh.innerHTML=”<div class='sec-title'><span class='sec-emoji'>”+s.em+”</span><span class='sec-name'>”+s.ti+”</span></div><div class='sec-meta'><span class='sec-count' id='c"+pg.tab+s.ti+"'>0/”+s.items.length+”</span><span class='sec-arrow'>›</span></div>”;
-sh.addEventListener(“click”,function(){toggleSec(sid);});
-var ie=document.createElement(“div”);
-ie.className=“sec-items”;
+var sh=document.createElement("div");
+sh.className="sec-head";
+sh.innerHTML="<div class='sec-title'><span class='sec-emoji'>"+s.em+"</span><span class='sec-name'>"+s.ti+"</span></div><div class='sec-meta'><span class='sec-count' id='c"+pg.tab+s.ti+"'>0/"+s.items.length+"</span><span class='sec-arrow'>&#8250;</span></div>";
+sh.addEventListener("click",function(){toggleSec(sid);});
+var ie=document.createElement("div");
+ie.className="sec-items";
 s.items.forEach(function(it){
 var key=pg.tab+s.ti+it.t;
-var d=document.createElement(“div”);
-d.className=“item”;
-var ph=””;
-if(it.po)ph+=”<div class='prompt pose'><span class='ptag'>Pose</span>”+it.po+”</div>”;
-if(it.te)ph+=”<div class='prompt tech'><span class='ptag'>Tech</span>”+it.te+”</div>”;
-if(it.pu)ph+=”<div class='prompt pun'><span class='ptag'>Pun</span>”+it.pu+”</div>”;
-d.innerHTML=”<div class='chk'><svg class='checkmark' viewBox='0 0 11 11' fill="none"><path d='M1.5 5.5l3 3 5-5' stroke="#0f0f0f" stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg></div><div class='item-text'><div class='item-lbl'>”+it.t+”</div><div class='prompts'>”+ph+”</div></div>”;
-d.addEventListener(“click”,function(){toggle(key,d);});
+var d=document.createElement("div");
+d.className="item";
+var ph="";
+if(it.po)ph+="<div class='prompt pose'><span class='ptag'>Pose</span>"+it.po+"</div>";
+if(it.te)ph+="<div class='prompt tech'><span class='ptag'>Tech</span>"+it.te+"</div>";
+if(it.pu)ph+="<div class='prompt pun'><span class='ptag'>Pun</span>"+it.pu+"</div>";
+d.innerHTML="<div class='chk'><svg class='checkmark' viewBox='0 0 11 11' fill='none'><path d='M1.5 5.5l3 3 5-5' stroke='#0f0f0f' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg></div><div class='item-text'><div class='item-lbl'>"+it.t+"</div><div class='prompts'>"+ph+"</div></div>";
+d.addEventListener("click",function(){toggle(key,d);});
 ie.appendChild(d);
 });
 se.appendChild(sh);
@@ -376,6 +375,5 @@ pgsEl.appendChild(pgEl);
 });
 upd();
 </script>
-
 </body>
 </html>
