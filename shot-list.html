@@ -9,22 +9,16 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0f0f0f;
-      --card: #1a1a1a;
-      --border: #2e2e2e;
-      --gold: #c9a96e;
-      --gold-light: #e8c990;
-      --text: #f0ece4;
-      --text-muted: #7a7060;
-      --pose: #a8c4a2;
-      --tech: #8ab4d4;
+      --bg: #0f0f0f; --card: #1a1a1a; --border: #2e2e2e;
+      --gold: #c9a96e; --gold-light: #e8c990;
+      --text: #f0ece4; --text-muted: #7a7060;
+      --pose: #a8c4a2; --tech: #8ab4d4; --pun: #d4a8c4;
     }
     body { min-height: 100vh; background: var(--bg); font-family: 'DM Sans', sans-serif; padding-bottom: 80px; color: var(--text); }
     header { padding: 52px 24px 44px; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, #1a1510 0%, #0f0f0f 100%); }
     .header-eyebrow { font-size: 10px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; }
     header h1 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 36px; color: var(--text); line-height: 1.15; }
     header h1 em { font-style: italic; color: var(--gold-light); }
-    .header-sub { margin-top: 10px; font-size: 12px; color: var(--text-muted); letter-spacing: 0.08em; }
     .progress-wrap { margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
     .progress-ring-wrap { position: relative; width: 64px; height: 64px; }
     .progress-ring { transform: rotate(-90deg); }
@@ -32,7 +26,7 @@
     .progress-ring-fill { fill: none; stroke: var(--gold); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 163; stroke-dashoffset: 163; transition: stroke-dashoffset 0.5s ease; }
     .progress-pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: var(--gold-light); }
     .progress-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; }
-    .legend { display: flex; gap: 16px; justify-content: center; margin-top: 14px; }
+    .legend { display: flex; gap: 14px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
     .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text-muted); letter-spacing: 0.05em; }
     .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
     .tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--border); scrollbar-width: none; background: #111; }
@@ -68,6 +62,7 @@
     .prompt { font-size: 11px; line-height: 1.45; padding: 4px 8px; border-radius: 5px; }
     .prompt.pose { color: var(--pose); background: rgba(168,196,162,0.08); border-left: 2px solid rgba(168,196,162,0.3); }
     .prompt.tech { color: var(--tech); background: rgba(138,180,212,0.08); border-left: 2px solid rgba(138,180,212,0.3); }
+    .prompt.pun { color: var(--pun); background: rgba(212,168,196,0.08); border-left: 2px solid rgba(212,168,196,0.3); }
     .prompt-tag { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; margin-right: 4px; }
     .footer { text-align: center; max-width: 560px; margin: 0 auto; padding: 0 16px; }
     .complete-msg { display: none; background: linear-gradient(135deg, #2a1f0a, #3d2e10); border: 1px solid var(--gold); color: var(--gold-light); border-radius: 14px; padding: 18px 24px; font-size: 14px; margin-top: 28px; }
@@ -79,7 +74,6 @@
 <header>
   <div class="header-eyebrow">1985 Collective</div>
   <h1>Wedding Day<br><em>Shot List</em></h1>
-  <div class="header-sub">Photographer's Reference</div>
   <div class="progress-wrap">
     <div class="progress-ring-wrap">
       <svg class="progress-ring" width="64" height="64" viewBox="0 0 64 64">
@@ -93,6 +87,7 @@
   <div class="legend">
     <div class="legend-item"><div class="legend-dot" style="background:var(--pose)"></div> Posing</div>
     <div class="legend-item"><div class="legend-dot" style="background:var(--tech)"></div> Technical</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--pun)"></div> Pun</div>
   </div>
 </header>
 
@@ -111,45 +106,45 @@ const data = [
     categories: [
       { label: "Portraits", sections: [
         { emoji: "👰", title: "Bride Portraits", items: [
-          { text: "Bride in robe, natural window light", pose: "Have her stand close to the window, chin slightly down, eyes toward light. Ask her to take a slow breath.", tech: "f/2.0–2.8, expose for her skin, let window blow out slightly." },
-          { text: "Bride getting hair done", pose: "Ask the stylist to pause mid-motion. Have bride close her eyes softly or look down at her hands.", tech: "Shoot wide open f/1.8–2.2. Watch for flyaways catching light." },
-          { text: "Bride getting makeup done", pose: "Capture lips being done — ask MUA to hold brush in place. For eyes, have bride look straight up.", tech: "Macro or 85mm tight. Use available light only, no flash on skin here." },
-          { text: "Bride fully dressed — full length", pose: "Hands relaxed, slight weight shift to one hip. Ask her to walk toward you slowly and stop.", tech: "85mm or 50mm at f/2.0. Full body — include train if present." },
-          { text: "Bride — head & shoulders portrait", pose: "Chin forward and slightly down. Eyes directly into lens. One shoulder angled toward camera.", tech: "85mm f/1.8–2.0. Focus on closest eye." },
-          { text: "Bride looking out window", pose: "Have her stand side-on to window, look outside softly. Hands loosely in front.", tech: "Expose for face, not window. f/2.0, shoot from slightly behind." },
-          { text: "Bride with bridesmaids", pose: "Loose cluster around bride — no stiff lines. Ask them to squeeze in and laugh together.", tech: "Step back, 35mm or 50mm. f/2.8–4.0 to keep group sharp." },
-          { text: "Bride with mom", pose: "Ask mom to help adjust veil or dress. Capture the in-between moment — eyes meeting, touch.", tech: "Stay back, 85mm. Don't interrupt — observe and shoot." },
+          { text: "Bride in robe, natural window light", pose: "Stand close to window, chin slightly down, eyes toward light. Ask her to take a slow breath.", tech: "f/2.0–2.8, expose for skin, let window blow out slightly.", pun: "\"You look so good even the window is trying to frame you.\"" },
+          { text: "Bride getting hair done", pose: "Ask stylist to pause mid-motion. Have bride close eyes softly or look down at hands.", tech: "f/1.8–2.2. Watch for flyaways catching light.", pun: "\"Having a good hair day? More like a great hair day. Your stylist deserves a raise.\"" },
+          { text: "Bride getting makeup done", pose: "Capture lips being done — ask MUA to hold brush. For eyes, have bride look straight up.", tech: "85mm tight. Available light only, no flash on skin.", pun: "\"This is the only time it's acceptable to have someone else in your face all morning.\"" },
+          { text: "Bride fully dressed — full length", pose: "Hands relaxed, slight weight shift to one hip. Ask her to walk toward you slowly and stop.", tech: "85mm or 50mm at f/2.0. Include train if present.", pun: "\"Walk toward me like you're late to your own wedding... which technically you are.\"" },
+          { text: "Bride — head & shoulders portrait", pose: "Chin forward and slightly down. Eyes directly into lens. One shoulder angled toward camera.", tech: "85mm f/1.8–2.0. Focus on closest eye.", pun: "\"Look at me like I just told you there's cake. Perfect. Hold that.\"" },
+          { text: "Bride looking out window", pose: "Side-on to window, look outside softly. Hands loosely in front.", tech: "Expose for face, not window. f/2.0, shoot from slightly behind.", pun: "\"Pretend you're in a movie. Which you are — directed by me.\"" },
+          { text: "Bride with bridesmaids", pose: "Loose cluster around bride — no stiff lines. Ask them to squeeze in and laugh together.", tech: "35mm or 50mm. f/2.8–4.0 to keep group sharp.", pun: "\"On the count of three, everybody pretend you like each other. One, two...\"" },
+          { text: "Bride with mom", pose: "Ask mom to help adjust veil or dress. Capture the in-between moment.", tech: "Stay back, 85mm. Don't interrupt — observe and shoot.", pun: "\"Mom, tell her something embarrassing. Bride, try not to react.\"" },
         ]},
         { emoji: "🤵", title: "Groom Portraits", items: [
-          { text: "Groom in suit — full length", pose: "One hand in pocket, other relaxed. Slight turn — 3/4 angle to camera. Strong jaw, look just past lens.", tech: "85mm f/2.0. Find clean background. Watch for wrinkles in jacket." },
-          { text: "Groom — head & shoulders portrait", pose: "Ask him to look off in the distance first, then slowly bring eyes to camera. Gets a natural, confident expression.", tech: "85mm f/1.8. Focus on eyes. Slightly lower angle is flattering for men." },
-          { text: "Groom getting ready — adjusting tie or cufflinks", pose: "Ask him to adjust slowly. Capture hands in detail — rings, cufflinks.", tech: "Get close. 85mm or macro. f/2.0–2.5, focus on hands." },
-          { text: "Groom looking out window", pose: "Profile or 3/4 view. Ask him to think about the moment — genuine stillness.", tech: "Same as bride window shot. Expose for face." },
-          { text: "Groom with best man or groomsmen", pose: "Relaxed poses — lean on wall, hands in pockets. Capture a toast or handshake moment.", tech: "35mm or 50mm. f/2.8. Look for candid laughs." },
-          { text: "Groom with dad", pose: "Handshake turning into a hug works well. Or side by side looking out window.", tech: "Stay back on 85mm. Let the moment happen naturally." },
+          { text: "Groom in suit — full length", pose: "One hand in pocket, other relaxed. 3/4 angle to camera. Strong jaw, look just past lens.", tech: "85mm f/2.0. Clean background. Watch for jacket wrinkles.", pun: "\"You look like you could be on the cover of GQ. If GQ covered nervous grooms.\"" },
+          { text: "Groom — head & shoulders portrait", pose: "Look off in distance first, then slowly bring eyes to camera. Natural confident expression.", tech: "85mm f/1.8. Focus on eyes. Slightly lower angle flatters men.", pun: "\"Look at me like I just told you the bar is open. There we go.\"" },
+          { text: "Groom adjusting tie or cufflinks", pose: "Ask him to adjust slowly. Capture hands in detail — rings, cufflinks.", tech: "85mm or macro. f/2.0–2.5, focus on hands.", pun: "\"Pretend you know what you're doing. Just like the rest of today.\"" },
+          { text: "Groom looking out window", pose: "Profile or 3/4 view. Ask him to think about the moment — genuine stillness.", tech: "Expose for face. Same approach as bride window shot.", pun: "\"Think about something peaceful. Like the fact that the planning is officially over.\"" },
+          { text: "Groom with best man or groomsmen", pose: "Relaxed poses — lean on wall, hands in pockets. Capture a toast or handshake moment.", tech: "35mm or 50mm. f/2.8. Look for candid laughs.", pun: "\"Alright gentlemen, look tough. Tougher. You all look like you're waiting for brunch.\"" },
+          { text: "Groom with dad", pose: "Handshake turning into a hug works well. Or side by side looking out window.", tech: "85mm. Let the moment happen naturally.", pun: "\"Dad, give him some advice. Something useful. Not about lawn care.\"" },
         ]},
       ]},
       { label: "Details", sections: [
         { emoji: "💍", title: "Flatlay & Details", items: [
-          { text: "Full flatlay of all bridal items", pose: "Arrange largest items first — dress, shoes, bouquet. Build outward. Keep spacing consistent.", tech: "Shoot directly overhead. f/4.0–5.6 for full sharpness. Use natural light surface." },
-          { text: "Ring close-up on ring dish", pose: "Angle dish slightly. Place ring so stones catch light. Add petals or ribbon for softness.", tech: "Macro or 85mm. f/2.0–2.8. Watch for reflections in stones." },
-          { text: "Shoes detail shot", pose: "Pair them together heel to heel, or one standing one lying. Add bouquet nearby.", tech: "Low angle works well. f/2.0 for dreamy background." },
-          { text: "Invitation suite", pose: "Layer envelope behind card, add wax seal or florals. Keep lines clean and straight.", tech: "Overhead or slight angle. f/4.0 for full text sharpness." },
-          { text: "Jewelry close-ups", pose: "Lay on soft fabric — silk or linen. Space pieces so each reads clearly.", tech: "Macro lens ideal. f/2.8. Watch for reflections on metal." },
-          { text: "Dress hanging — full length", pose: "Hang near window on ornate door, mirror, or clean wall. Fluff train.", tech: "Wide enough to capture full train. f/2.8–4.0. Backlight adds glow." },
-          { text: "Dress detail — lace, buttons, train", pose: "Focus on most intricate section. Ask bride about her favorite dress detail.", tech: "Macro or 85mm tight crop. f/2.0. Let edges fall soft." },
-          { text: "Bouquet close-up", pose: "Hold at waist height or lay on flat surface. Show flowers face-on and from side.", tech: "f/2.0–2.5. Focus on lead blooms. Soft natural light only." },
-          { text: "Perfume + lipstick styled", pose: "Arrange with ribbon or small florals. Perfume standing, lipstick slightly angled.", tech: "f/2.0. Window light from the side creates nice shadows." },
+          { text: "Full flatlay of all bridal items", pose: "Arrange largest items first — dress, shoes, bouquet. Build outward with consistent spacing.", tech: "Shoot directly overhead. f/4.0–5.6 for full sharpness. Natural light surface.", pun: "\"The world's most expensive lost and found.\"" },
+          { text: "Ring close-up on ring dish", pose: "Angle dish slightly. Place ring so stones catch light. Add petals or ribbon.", tech: "Macro or 85mm. f/2.0–2.8. Watch for reflections in stones.", pun: "\"One ring to rule them all... and in this light, to photograph beautifully.\"" },
+          { text: "Shoes detail shot", pose: "Heel to heel, or one standing one lying. Add bouquet nearby.", tech: "Low angle. f/2.0 for dreamy background.", pun: "\"The most expensive things she'll wear all day and they'll kill her feet by 4pm.\"" },
+          { text: "Invitation suite", pose: "Layer envelope behind card, add wax seal or florals. Clean straight lines.", tech: "Overhead or slight angle. f/4.0 for full text sharpness.", pun: "\"The paper that started it all. Worth more than most people's rent.\"" },
+          { text: "Jewelry close-ups", pose: "Lay on soft fabric — silk or linen. Space pieces so each reads clearly.", tech: "Macro ideal. f/2.8. Watch for reflections on metal.", pun: "\"Bling bling, as the experts say.\"" },
+          { text: "Dress hanging — full length", pose: "Hang near window on ornate door, mirror, or clean wall. Fluff train.", tech: "Wide enough for full train. f/2.8–4.0. Backlight adds glow.", pun: "\"The dress that took 6 months to choose and 20 minutes to put on.\"" },
+          { text: "Dress detail — lace, buttons, train", pose: "Focus on most intricate section. Ask bride about her favorite dress detail.", tech: "Macro or 85mm tight. f/2.0. Let edges fall soft.", pun: "\"Someone hand-stitched this. Probably lost their mind. Beautiful though.\"" },
+          { text: "Bouquet close-up", pose: "Hold at waist or lay flat. Show flowers face-on and from side.", tech: "f/2.0–2.5. Focus on lead blooms. Soft natural light only.", pun: "\"Flowers that cost more than dinner but look incredible in photos.\"" },
+          { text: "Perfume + lipstick styled", pose: "Arrange with ribbon or small florals. Perfume standing, lipstick slightly angled.", tech: "f/2.0. Side window light creates nice shadows.", pun: "\"The two things she'll reapply every hour and it'll still look perfect.\"" },
         ]},
       ]},
       { label: "Candids", sections: [
         { emoji: "✨", title: "Candid Moments", items: [
-          { text: "Bridesmaids laughing together", pose: "Tell them a bad joke or ask them to recreate how the groom proposed. Pure reaction.", tech: "35mm or 50mm. f/2.8. Continuous shooting mode." },
-          { text: "Bride seeing herself in mirror", pose: "Position yourself to capture both bride's face and reflection. Don't direct — observe.", tech: "Include mirror frame in composition. f/2.0–2.8." },
-          { text: "Mom or MOH zipping up dress", pose: "Step back and let it happen. Ask bride to look down at dress during zip.", tech: "85mm from across room. f/2.0. Quiet and unobtrusive." },
-          { text: "Champagne toast", pose: "Ask everyone to raise glasses and look at each other — not camera. Capture clinking.", tech: "Continuous shooting. f/2.8. Watch for backlight on bubbles." },
-          { text: "Bride receiving letter from groom", pose: "Do not interfere. Position for her face as she reads. Tissues ready.", tech: "Long lens 85–135mm. f/2.0. Stay far back." },
-          { text: "Quiet moment before leaving", pose: "Ask everyone to give bride 2 minutes alone. Capture her stillness.", tech: "Wide shot of room context, then tight on face. f/2.0." },
+          { text: "Bridesmaids laughing together", pose: "Tell them a bad joke or ask them to recreate how the groom proposed.", tech: "35mm or 50mm. f/2.8. Continuous shooting mode.", pun: "\"Why did the bridesmaid sit on the bouquet? She wanted to be the next one to catch feelings.\"" },
+          { text: "Bride seeing herself in mirror", pose: "Position to capture both face and reflection. Don't direct — observe.", tech: "Include mirror frame in composition. f/2.0–2.8.", pun: "\"Mirror mirror on the wall... honestly, competition is over.\"" },
+          { text: "Mom or MOH zipping up dress", pose: "Step back and let it happen. Ask bride to look down during zip.", tech: "85mm from across room. f/2.0. Quiet and unobtrusive.", pun: "\"This is the only time it's socially acceptable for someone to zip you into your outfit.\"" },
+          { text: "Champagne toast", pose: "Raise glasses and look at each other — not camera. Capture clinking.", tech: "Continuous shooting. f/2.8. Watch for backlight on bubbles.", pun: "\"To the bride! May her day be long and her Spanx be comfortable.\"" },
+          { text: "Bride receiving letter from groom", pose: "Do not interfere. Position for her face as she reads. Tissues ready.", tech: "85–135mm. f/2.0. Stay far back.", pun: "\"He actually wrote it himself. Probably rewrote it 12 times.\"" },
+          { text: "Quiet moment before leaving", pose: "Ask everyone to give bride 2 minutes alone. Capture her stillness.", tech: "Wide shot for room context, then tight on face. f/2.0.", pun: "\"The last 2 minutes of her old name. Make them count.\"" },
         ]},
       ]}
     ]
@@ -159,33 +154,33 @@ const data = [
     categories: [
       { label: "Portraits", sections: [
         { emoji: "💒", title: "Processional & Altar", items: [
-          { text: "Groom waiting at altar — full length", pose: "Capture him before he sees bride — hands clasped, looking down aisle. Natural anticipation.", tech: "85mm from side or slight angle. f/2.0. Use aisle as leading line." },
-          { text: "Groom's reaction as bride walks in", pose: "Pre-focus on groom's face before bride enters. Do not miss this shot.", tech: "Stay on groom. 85mm. Continuous AF. f/2.0–2.8." },
-          { text: "Bride walking down aisle with escort", pose: "Shoot from altar end — bride walking toward you. Also capture from side for escort hand detail.", tech: "85mm from front. f/2.8. Watch aisle lighting — may need to lift ISO." },
-          { text: "Bride & groom face to face at altar", pose: "Capture both profiles — position yourself at 45° from altar side.", tech: "85mm. f/2.0–2.5. Expose for faces, not bright window behind." },
-          { text: "Ring exchange — close-up of hands", pose: "Get as close as officiant allows. Focus on the moment the ring slides on.", tech: "Move to side for hand angle. f/2.0 macro or 85mm tight." },
-          { text: "First kiss", pose: "Pre-focus. Be ready before 'you may kiss.' Capture dip if they do one.", tech: "Continuous shooting. f/2.8. Have second angle if possible." },
-          { text: "Recessional — couple walking back", pose: "Position at end of aisle. Capture couple coming toward you, guests reacting behind.", tech: "35mm or 50mm. f/2.8. Include guests blurred in background." },
+          { text: "Groom waiting at altar — full length", pose: "Capture him before he sees bride — hands clasped, looking down aisle. Natural anticipation.", tech: "85mm from side or slight angle. f/2.0. Use aisle as leading line.", pun: "\"He's been standing here for 3 minutes. He's either in love or his shoes hurt.\"" },
+          { text: "Groom's reaction as bride walks in", pose: "Pre-focus on groom's face before bride enters. Do not miss this shot.", tech: "Stay on groom. 85mm. Continuous AF. f/2.0–2.8.", pun: "\"Watch his face. That expression is why we do this job.\"" },
+          { text: "Bride walking down aisle with escort", pose: "Shoot from altar end — bride walking toward you. Side for escort hand detail.", tech: "85mm from front. f/2.8. Watch aisle lighting — lift ISO if needed.", pun: "\"The longest and shortest walk of her life, all at once.\"" },
+          { text: "Bride & groom face to face at altar", pose: "Capture both profiles — position at 45° from altar side.", tech: "85mm. f/2.0–2.5. Expose for faces, not bright window behind.", pun: "\"They're looking at each other like nobody else exists. Because right now, nobody does.\"" },
+          { text: "Ring exchange — close-up of hands", pose: "Get as close as officiant allows. Focus on the moment the ring slides on.", tech: "Move to side for hand angle. f/2.0 macro or 85mm tight.", pun: "\"The most expensive game of ring toss you'll ever photograph.\"" },
+          { text: "First kiss", pose: "Pre-focus. Be ready before 'you may kiss.' Capture dip if they do one.", tech: "Continuous shooting. f/2.8. Second angle if possible.", pun: "\"Everyone's been waiting for this. Especially the groom.\"" },
+          { text: "Recessional — couple walking back", pose: "Position at end of aisle. Couple coming toward you, guests reacting behind.", tech: "35mm or 50mm. f/2.8. Include guests blurred in background.", pun: "\"They came in as two people and they're leaving as one unit. And now the party starts.\"" },
         ]},
       ]},
       { label: "Details", sections: [
         { emoji: "🌸", title: "Ceremony Details", items: [
-          { text: "Venue — wide establishing shot", pose: "Before guests arrive. Capture full space — altar, seating, florals.", tech: "Wide lens 24–35mm. f/5.6–8.0. Tripod if low light." },
-          { text: "Altar or arch decoration detail", pose: "Shoot through florals for dreamy foreground blur.", tech: "85mm f/2.0. Use florals as foreground element." },
-          { text: "Florals & centerpieces", pose: "Get low and shoot up slightly. Include background context softly.", tech: "f/2.0–2.5. Focus on closest blooms." },
-          { text: "Programs or signage", pose: "Lay program flat on pew or stand with florals nearby.", tech: "f/4.0 for text sharpness. Even, soft light." },
-          { text: "Rings on bible or pillow", pose: "Stack rings or place side by side. Add florals for color.", tech: "Macro or 85mm tight. f/2.0. Watch reflections." },
-          { text: "Candles or ceremony lighting", pose: "Look for candle clusters and shoot through them with subject behind.", tech: "f/1.8–2.0. High ISO if needed. Let candles slightly overexpose." },
+          { text: "Venue — wide establishing shot", pose: "Before guests arrive. Capture full space — altar, seating, florals.", tech: "Wide 24–35mm. f/5.6–8.0. Tripod if low light.", pun: "\"Empty chairs, full hearts. Also, get this before people start sitting in weird spots.\"" },
+          { text: "Altar or arch decoration detail", pose: "Shoot through florals for dreamy foreground blur.", tech: "85mm f/2.0. Use florals as foreground element.", pun: "\"Someone spent 6 hours on this arch. Give it the close-up it deserves.\"" },
+          { text: "Florals & centerpieces", pose: "Get low and shoot up slightly. Include background context softly.", tech: "f/2.0–2.5. Focus on closest blooms.", pun: "\"Flowers that are prettier than most people and they know it.\"" },
+          { text: "Programs or signage", pose: "Lay program flat on pew or stand with florals nearby.", tech: "f/4.0 for text sharpness. Even, soft light.", pun: "\"The thing everyone reads once and leaves on the seat.\"" },
+          { text: "Rings on bible or pillow", pose: "Stack rings or place side by side. Add florals for color.", tech: "Macro or 85mm tight. f/2.0. Watch reflections.", pun: "\"Small objects, enormous meaning. Handle with care.\"" },
+          { text: "Candles or ceremony lighting", pose: "Shoot through candle clusters with subject behind.", tech: "f/1.8–2.0. High ISO if needed. Let candles slightly overexpose.", pun: "\"Someone has to light all of these. Not it.\"" },
         ]},
       ]},
       { label: "Candids", sections: [
         { emoji: "😢", title: "Emotional Moments", items: [
-          { text: "Parents' reactions during processional", pose: "Watch mother of bride especially. Position near front row before processional starts.", tech: "85mm from aisle. f/2.0. Be ready before bride reaches them." },
-          { text: "Guests wiping tears", pose: "Scan rows during vows. Move quietly. Look for genuine reactions.", tech: "Long lens 135mm if available. f/2.0. Silent shutter if possible." },
-          { text: "Flower girl or ring bearer walking", pose: "Get low — their level. Capture personality. They may not cooperate — shoot fast.", tech: "35–50mm. f/2.8. Burst mode." },
-          { text: "Wedding party reactions at altar", pose: "During vows, pan slowly across wedding party faces. Candid reactions.", tech: "85mm from angle. f/2.0–2.5." },
-          { text: "Couple laughing during vows", pose: "Stay ready — often happens during personal vows. Don't anticipate, just react.", tech: "Continuous shooting. f/2.0." },
-          { text: "Wide shot of full congregation", pose: "Capture from back or elevated position if available. Shows full scale of ceremony.", tech: "24–35mm. f/5.6–8.0. Include altar in frame." },
+          { text: "Parents' reactions during processional", pose: "Watch mother of bride especially. Position near front row before processional.", tech: "85mm from aisle. f/2.0. Be ready before bride reaches them.", pun: "\"Dads who said they weren't going to cry: currently crying.\"" },
+          { text: "Guests wiping tears", pose: "Scan rows during vows. Move quietly. Look for genuine reactions.", tech: "135mm if available. f/2.0. Silent shutter if possible.", pun: "\"Who gave out onions? Nobody? Just the vows then.\"" },
+          { text: "Flower girl or ring bearer walking", pose: "Get low — their level. Capture personality. Shoot fast.", tech: "35–50mm. f/2.8. Burst mode.", pun: "\"50% adorable, 50% chaos, 100% unpredictable. Stay on burst.\"" },
+          { text: "Wedding party reactions at altar", pose: "During vows, pan slowly across wedding party faces. Candid reactions.", tech: "85mm from angle. f/2.0–2.5.", pun: "\"The maid of honor is already crying. The best man is pretending he's not.\"" },
+          { text: "Couple laughing during vows", pose: "Stay ready — often happens during personal vows. Don't anticipate, just react.", tech: "Continuous shooting. f/2.0.", pun: "\"The best vows always have at least one inside joke nobody else understands.\"" },
+          { text: "Wide shot of full congregation", pose: "From back or elevated position. Shows full scale of ceremony.", tech: "24–35mm. f/5.6–8.0. Include altar in frame.", pun: "\"Everyone dressed their best and showed up. That's love right there.\"" },
         ]},
       ]}
     ]
@@ -195,36 +190,36 @@ const data = [
     categories: [
       { label: "Portraits", sections: [
         { emoji: "👨‍👩‍👧", title: "Family Formals", items: [
-          { text: "Bride & groom alone — full length", pose: "Groom behind bride, hands on waist. Both angled slightly, not square to camera.", tech: "85mm f/2.0. Clean background. Check for distractions behind." },
-          { text: "Bride with her parents", pose: "Bride in center, parents on each side. Slight lean in together. Ask for a real hug.", tech: "50–85mm. f/2.8. Even light across all three faces." },
-          { text: "Bride with mom only", pose: "Holding hands or forehead to forehead. Let emotion happen naturally.", tech: "85mm f/2.0. Tight crop. Focus on faces." },
-          { text: "Bride with dad only", pose: "Classic arm-in-arm. Also capture a quiet moment — dad looking at bride.", tech: "85mm f/2.0. Watch dad's expression especially." },
-          { text: "Groom with his parents", pose: "Same as bride parents. Groom center, relaxed arms around parents.", tech: "50–85mm f/2.8." },
-          { text: "Groom with mom only", pose: "Hug or hands held. Mom looking up at groom works beautifully.", tech: "85mm f/2.0." },
-          { text: "Groom with dad only", pose: "Handshake or side-by-side. Ask dad to put arm around groom's shoulder.", tech: "85mm f/2.0." },
-          { text: "Both families together", pose: "Largest group — arrange by height. Couples together. Check everyone is visible.", tech: "35–50mm. f/4.0–5.6. Step back for full group." },
-          { text: "Bride & groom with all siblings", pose: "Relaxed — no strict lines. Suggest a group hug or pile-in.", tech: "35–50mm. f/2.8–4.0." },
-          { text: "Bride & groom with grandparents", pose: "Grandparents seated if needed. Couple kneeling or crouching to their level.", tech: "50mm. f/2.8. Be quick — limit standing time for elderly guests." },
-          { text: "Full wedding party — wide shot", pose: "Groomsmen one side, bridesmaids other. Couple center elevated if possible.", tech: "35mm. f/4.0–5.6. Check all faces visible before shooting." },
-          { text: "Bridesmaids only", pose: "Loose and fun — bouquets up, laugh together. Also do a straight formal.", tech: "50mm f/2.8. Step back for full group." },
-          { text: "Groomsmen only", pose: "Arms crossed or hands in pockets. Relaxed strong poses. Also capture a funny one.", tech: "50mm f/2.8–4.0." },
-          { text: "Bride with bridesmaids", pose: "Bouquets at waist. Bride slightly forward. Tight cluster.", tech: "50mm f/2.8." },
-          { text: "Groom with groomsmen", pose: "Walking toward camera works great — cinematic feel.", tech: "35mm f/2.8. Low angle for drama." },
+          { text: "Bride & groom alone — full length", pose: "Groom behind bride, hands on waist. Both angled slightly, not square to camera.", tech: "85mm f/2.0. Clean background. Check for distractions.", pun: "\"The power couple has entered the chat.\"" },
+          { text: "Bride with her parents", pose: "Bride center, parents on each side. Slight lean in. Ask for a real hug.", tech: "50–85mm. f/2.8. Even light across all three faces.", pun: "\"The people who made today possible. In every sense.\"" },
+          { text: "Bride with mom only", pose: "Holding hands or forehead to forehead. Let emotion happen naturally.", tech: "85mm f/2.0. Tight crop. Focus on faces.", pun: "\"She learned everything she knows about love from this woman.\"" },
+          { text: "Bride with dad only", pose: "Classic arm-in-arm. Capture a quiet moment — dad looking at bride.", tech: "85mm f/2.0. Watch dad's expression especially.", pun: "\"He practiced this walk for weeks but nothing prepared him for the real thing.\"" },
+          { text: "Groom with his parents", pose: "Groom center, relaxed arms around parents.", tech: "50–85mm f/2.8.", pun: "\"The people who raised him well enough that she said yes.\"" },
+          { text: "Groom with mom only", pose: "Hug or hands held. Mom looking up at groom works beautifully.", tech: "85mm f/2.0.", pun: "\"She's been waiting for this day almost as long as the bride has.\"" },
+          { text: "Groom with dad only", pose: "Handshake or side-by-side. Ask dad to put arm around groom's shoulder.", tech: "85mm f/2.0.", pun: "\"Two generations of good taste in suits.\"" },
+          { text: "Both families together", pose: "Largest group — arrange by height. Check everyone is visible.", tech: "35–50mm. f/4.0–5.6. Step back for full group.", pun: "\"Two families becoming one. Herding cats has never looked this elegant.\"" },
+          { text: "Bride & groom with all siblings", pose: "Relaxed — no strict lines. Suggest a group hug or pile-in.", tech: "35–50mm. f/2.8–4.0.", pun: "\"The people who know all the embarrassing stories and love them anyway.\"" },
+          { text: "Bride & groom with grandparents", pose: "Grandparents seated if needed. Couple kneeling or crouching to their level.", tech: "50mm. f/2.8. Be quick — limit standing time.", pun: "\"These two have forgotten more about marriage than we'll ever know.\"" },
+          { text: "Full wedding party — wide shot", pose: "Groomsmen one side, bridesmaids other. Couple center elevated if possible.", tech: "35mm. f/4.0–5.6. Check all faces visible.", pun: "\"The squad. The legend. The people who survived the group chat.\"" },
+          { text: "Bridesmaids only", pose: "Loose and fun — bouquets up, laugh together. Also do a formal.", tech: "50mm f/2.8. Step back for full group.", pun: "\"Ladies who collectively spent $3000 on dresses they were told they'd wear again.\"" },
+          { text: "Groomsmen only", pose: "Arms crossed or hands in pockets. Relaxed and strong. Capture a funny one too.", tech: "50mm f/2.8–4.0.", pun: "\"Gentlemen, look like you know what you're doing. Fantastic. Now one where you don't.\"" },
+          { text: "Bride with bridesmaids", pose: "Bouquets at waist. Bride slightly forward. Tight cluster.", tech: "50mm f/2.8.", pun: "\"Her real ones. The group text that never sleeps.\"" },
+          { text: "Groom with groomsmen", pose: "Walking toward camera — cinematic feel.", tech: "35mm f/2.8. Low angle for drama.", pun: "\"Walking like they own the place. Today, they do.\"" },
         ]},
       ]},
       { label: "Details", sections: [
         { emoji: "💐", title: "Group Details", items: [
-          { text: "Bouquets grouped together", pose: "All bridesmaids hold bouquets close together overhead or in a cluster. Shoot from above.", tech: "Overhead. f/4.0. Colorful and graphic." },
-          { text: "Boutonnieres close-up", pose: "Groomsmen in a line — focus on chest details. Or isolate one on groom.", tech: "85mm f/2.0–2.5. Clean jacket background." },
-          { text: "Wedding party shoes lineup", pose: "All in a row — mix bride heels with groomsmen shoes for contrast.", tech: "Low angle. f/2.8–4.0. Leading line composition." },
+          { text: "Bouquets grouped together", pose: "All bridesmaids hold bouquets close together overhead or in a cluster. Shoot from above.", tech: "Overhead. f/4.0. Colorful and graphic.", pun: "\"A garden worth of flowers, one perfect overhead shot.\"" },
+          { text: "Boutonnieres close-up", pose: "Groomsmen in a line — focus on chest details. Or isolate one on groom.", tech: "85mm f/2.0–2.5. Clean jacket background.", pun: "\"The tiny flower they'll forget they're wearing until the end of the night.\"" },
+          { text: "Wedding party shoes lineup", pose: "All in a row — mix bride heels with groomsmen shoes for contrast.", tech: "Low angle. f/2.8–4.0. Leading line composition.", pun: "\"Her: 4 inch heels. Him: sensible oxfords. Marriage already making compromises.\"" },
         ]},
       ]},
       { label: "Candids", sections: [
         { emoji: "🤣", title: "In-Between Moments", items: [
-          { text: "Candid laughter between poses", pose: "Tell a terrible pun between setups. Genuine reactions are gold.", tech: "Stay ready on 35–50mm. f/2.8. Continuous mode." },
-          { text: "Kids running or playing", pose: "Let them be kids. Get low to their level. Capture joy and chaos.", tech: "35mm f/2.8. Fast shutter 1/500+. Burst mode." },
-          { text: "Grandparents together", pose: "Holding hands or sharing a quiet moment. Don't over-direct.", tech: "85mm f/2.0. Stay back and observe." },
-          { text: "Siblings goofing around", pose: "Capture the in-between — adjusting ties, whispering, teasing each other.", tech: "35–50mm f/2.8. Be unobtrusive." },
+          { text: "Candid laughter between poses", pose: "Tell a terrible pun between setups. Genuine reactions are gold.", tech: "35–50mm. f/2.8. Continuous mode.", pun: "\"Why don't scientists trust atoms? Because they make up everything. Like wedding toasts.\"" },
+          { text: "Kids running or playing", pose: "Get low — their level. Capture joy and chaos.", tech: "35mm f/2.8. Fast shutter 1/500+. Burst mode.", pun: "\"The only guests who are 100% themselves all day. Respect.\"" },
+          { text: "Grandparents together", pose: "Holding hands or sharing a quiet moment. Don't over-direct.", tech: "85mm f/2.0. Stay back and observe.", pun: "\"Decades of love in one frame. This is what we're shooting toward.\"" },
+          { text: "Siblings goofing around", pose: "Capture the in-between — adjusting ties, whispering, teasing each other.", tech: "35–50mm f/2.8. Be unobtrusive.", pun: "\"The people legally required to love you even when you're annoying.\"" },
         ]},
       ]}
     ]
@@ -233,34 +228,59 @@ const data = [
     tab: "Couples",
     categories: [
       { label: "Portraits", sections: [
-        { emoji: "💑", title: "Couples Session", items: [
-          { text: "Walking together — full length", pose: "Ask them to walk slowly past you, talking to each other — not the camera. Natural movement.", tech: "35–50mm. f/2.0–2.8. Pan slightly with them." },
-          { text: "Forehead touch — intimate close-up", pose: "Ask them to close eyes, touch foreheads, and just breathe. Give them 10 seconds of silence.", tech: "85mm f/1.8–2.0. Very tight. Focus on point of contact." },
-          { text: "Dip or twirl pose", pose: "Groom: right hand on her back, left takes her hand. Dip on exhale. Warn them first.", tech: "Wide enough to capture full extension. f/2.8. Fast shutter." },
-          { text: "Golden hour backlit shot", pose: "Sun behind them, slight rim light. Ask them to touch foreheads or share a kiss.", tech: "Expose for faces, let background blow. f/2.0. Use lens flare intentionally." },
-          { text: "Looking at each other — candid", pose: "Ask groom to whisper something he loves about her in her ear. Capture her reaction.", tech: "85mm f/2.0. Stay back. Don't interrupt the moment." },
-          { text: "Hands together — ring detail", pose: "Bride's hand on top of groom's. Both hands relaxed, slightly cupped.", tech: "Macro or 85mm tight. f/2.0. Side light to show ring depth." },
-          { text: "Silhouette shot", pose: "Position couple against bright sky or window. Have them kiss or touch foreheads.", tech: "Expose for sky — faces become silhouette. f/8.0–11. Shoot slightly upward." },
-          { text: "Sitting together — relaxed pose", pose: "Find steps, bench, or ground. Groom legs out, bride leaning into him. Relaxed and real.", tech: "Get low — eye level with them. 85mm f/2.0." },
-          { text: "Laughing together naturally", pose: "Ask them: what is the most embarrassing thing that's happened to you as a couple? Pure laugh reaction.", tech: "35–50mm. f/2.0–2.8. Burst mode." },
-          { text: "Walking away — rear view", pose: "Ask them to walk away holding hands. Capture dress train and movement.", tech: "35–50mm f/2.0. Include environment for context." },
+        { emoji: "🕴️", title: "Three-Quarter Poses", items: [
+          { text: "3/4 — Classic angle, groom behind bride", pose: "Groom stands slightly behind, hands on bride's waist. Both look at camera at slight 3/4 angle. Chin out, weight on back foot.", tech: "85mm f/2.0. Classic and clean. Watch for groom's hands overlapping awkwardly.", pun: "\"You two look like a movie poster. I'm calling it: best picture.\"" },
+          { text: "3/4 — Bride looking back over shoulder", pose: "Groom faces camera, bride turned away slightly and looks back over shoulder toward him. Creates elegant line through body.", tech: "85mm f/2.0. Shoot from slightly to groom's side. Focus on bride's face.", pun: "\"The 'just one more look' pose. Classic for a reason.\"" },
+          { text: "3/4 — Hands clasped, both looking down", pose: "Stand side by side, clasp hands between them. Both look down at hands. Intimate and tender.", tech: "85mm f/2.0. Shoot slightly above. Include both faces softly.", pun: "\"They're both thinking 'don't drop the ring.' The ring is already on.\"" },
+          { text: "3/4 — Forehead touch, eyes closed", pose: "Touch foreheads, close eyes, take a breath. Leave 10 seconds of silence before shooting.", tech: "85mm f/1.8. Very tight. Focus on point of contact.", pun: "\"This is the pose where even the camera feels like it's interrupting something private.\"" },
+          { text: "3/4 — Bride leaning into groom's chest", pose: "Bride leans back into groom's chest, his arms wrapped around her from behind. Both can look at camera or away.", tech: "85mm f/2.0. Shoot from slightly in front. Watch both faces are visible.", pun: "\"He's her human backrest for the rest of their lives. Romantic.\"" },
+          { text: "3/4 — Groom whispering in bride's ear", pose: "Groom leans in to whisper something — ask him to say something sweet or funny. Capture her genuine reaction.", tech: "85mm f/2.0. Focus on bride's face and expression. Shoot continuously.", pun: "\"Tell her what you love about her. Then tell her again for the camera.\"" },
+          { text: "3/4 — Couple looking in same direction", pose: "Side by side, both looking off in the same direction. Contemplative, cinematic. Groom's hand in bride's.", tech: "85mm f/2.0. Position so faces catch light. Strong environmental context.", pun: "\"Looking toward their future. Which includes a lot of dishes and Netflix.\"" },
+          { text: "3/4 — Nose-to-nose almost kiss", pose: "Foreheads and noses touching, mouths close but not kissing. Eyes can be open or closed. Tension is beautiful.", tech: "85mm f/1.8. Get close. Razor sharp on eyes if open.", pun: "\"The almost-kiss. More tension than the actual kiss. Shoot in burst.\"" },
+          { text: "3/4 — Groom lifting bride's hand to kiss", pose: "Groom takes bride's hand, lifts it gently to lips. Bride looks at him with soft eyes. Timeless and romantic.", tech: "85mm f/2.0. Focus on the hand and groom's face. Capture bride's reaction too.", pun: "\"Chivalry is alive and on your SD card.\"" },
+          { text: "3/4 — Both laughing, heads together", pose: "Ask them to tell each other their worst wedding joke. Genuine laugh, heads naturally come together.", tech: "85mm f/2.0. Continuous shooting. The mid-laugh frame is the one.", pun: "\"Why was the wedding cake so expensive? It was in tiers. Watch their reaction.\"" },
+        ]},
+        { emoji: "🧍", title: "Full Body Poses", items: [
+          { text: "Full body — Walking toward camera", pose: "Walk slowly side by side, talking to each other — not the camera. Natural movement, genuine connection.", tech: "35–50mm. f/2.0–2.8. Pan slightly with them as they move.", pun: "\"Walk like you just got married. Which you did. Look at you go.\"" },
+          { text: "Full body — Walking away, rear view", pose: "Walk away holding hands. Don't look back. Include full train and environment.", tech: "35–50mm f/2.0. Step back for environment context. Train in frame.", pun: "\"The beginning of the rest of their lives. And a great dress rear shot.\"" },
+          { text: "Full body — Dip pose", pose: "Groom right hand on her back, left takes her hand. Dip on exhale. Warn them first — count to three.", tech: "Wide enough for full extension. f/2.8. Fast shutter 1/500+ for sharpness.", pun: "\"On three. One... two... dip! Don't drop her. That would be a different kind of photo.\"" },
+          { text: "Full body — Twirl pose", pose: "Groom holds her hand up, she spins under it. Capture the spin AND the moment she faces him again.", tech: "35mm. f/2.8. Burst mode. The look after the twirl is the shot.", pun: "\"Spin her! Capture the dress in full flight. It's been waiting for this moment all day.\"" },
+          { text: "Full body — Couple under arch or doorway", pose: "Use venue architecture as a natural frame. Couple close together inside the frame. Can be facing camera or each other.", tech: "35mm. f/2.8. Include full arch. Step back to show full framing.", pun: "\"Nature and architecture conspired to frame these two perfectly. Take the hint.\"" },
+          { text: "Full body — Running toward camera", pose: "Start 30 feet back, run toward camera laughing and holding hands. Not posed — pure energy.", tech: "35mm. f/4.0. Fast shutter 1/1000+. Burst mode. Get several passes.", pun: "\"Run! It's just for the photo. Unless they keep going — then it's an elopement sequel.\"" },
+          { text: "Full body — Sitting on ground or steps", pose: "Find steps, ground, or bench. Groom legs out, bride leaning into him. Relaxed, real, unhurried.", tech: "Get low — eye level with them. 85mm f/2.0. Include environment.", pun: "\"The most expensive outfit either of them has ever worn, sitting on the ground. Beautiful.\"" },
+          { text: "Full body — Silhouette against sky or window", pose: "Position against bright sky or window. Have them kiss or touch foreheads for distinctive shape.", tech: "Expose for sky — faces become silhouette. f/8.0–11. Shoot slightly upward.", pun: "\"Two people, one shadow, infinite Instagram potential.\"" },
+          { text: "Full body — Groom carrying bride", pose: "Classic carry — bridal style. Ask bride to throw head back laughing for a natural, joyful version.", tech: "35–50mm. f/2.8. Capture full body including feet. Fast shutter.", pun: "\"Technically practice for the threshold. Also a great workout for the groom.\"" },
+          { text: "Full body — Golden hour wide shot", pose: "Couple small in frame — environment tells the story. Place them at natural thirds. Sun behind them.", tech: "24–35mm. f/5.6–8.0. Expose for sky. Couple will be lit by reflected light or slightly underexposed for drama.", pun: "\"The whole world in one frame, and they're the center of it. Because today they are.\"" },
+        ]},
+        { emoji: "🤏", title: "Tight Intimate Poses", items: [
+          { text: "Intimate — Eyes only, extreme close-up", pose: "Shoot tight on just their eyes — both open, looking at each other or camera. Include lashes, brows, emotion.", tech: "85mm or macro. f/2.0. Razor sharp on iris. Very still.", pun: "\"Eyes that have looked at each other every day and still find something new.\"" },
+          { text: "Intimate — Hands intertwined, rings visible", pose: "Both hands clasped together, both rings showing. Soft relaxed grip, not stiff.", tech: "Macro or 85mm. f/2.0. Side light to show ring depth and texture.", pun: "\"The world's most photographed accessory, on the world's most important hands.\"" },
+          { text: "Intimate — Bride's hand on groom's chest", pose: "Bride places hand flat on groom's chest. Both look down at it or bride looks up at him. Tender and quiet.", tech: "85mm f/2.0. Focus on hand and face relationship. Soft light.", pun: "\"Hand on heart. Literally. That's the whole beautiful point.\"" },
+          { text: "Intimate — Lips almost touching", pose: "Mouths close, almost kissing, tension held. Eyes can be open or closed. Slow exhale.", tech: "85mm f/1.8. Shoot in burst — they'll eventually actually kiss.", pun: "\"Almost. Almost. There it is. Got it.\"" },
+          { text: "Intimate — Groom's hand on bride's face", pose: "Groom cups bride's face gently with one hand. She leans into it. Eyes closed or looking at each other.", tech: "85mm f/1.8–2.0. Very tight. Focus on the touch and nearest eye.", pun: "\"The most gentle gesture. Also the one that will make her mom cry at the viewing.\"" },
+          { text: "Intimate — Veil over both faces", pose: "Drape veil gently over both faces while they're close together. Ethereal and soft.", tech: "85mm f/2.0. Shoot through veil fabric. Soft dreamy result.", pun: "\"Behind the veil. The world disappears. It's just the two of them.\"" },
+          { text: "Intimate — Noses touching, side profile", pose: "Side profile of both — noses just touching, foreheads close. Strong graphic composition.", tech: "85mm. f/2.0. Shoot from directly to the side. Clean background.", pun: "\"The profile shot that looks like a coin they'd put on a commemorative quarter.\"" },
+          { text: "Intimate — Groom's hand around bride's waist from behind", pose: "His hand at the small of her back, her hand placed over his. Both looking forward or she turns slightly.", tech: "85mm f/2.0. Focus on the hands. Faces softly in background.", pun: "\"A hand on the small of the back. The universal language of 'I've got you.'\"" },
+          { text: "Intimate — Forehead kiss", pose: "Groom kisses bride's forehead while she closes her eyes and leans in. Pure tenderness.", tech: "85mm f/1.8. Focus on bride's face. Capture both in frame.", pun: "\"The forehead kiss. Reserved only for the people we love most. Get it before they move.\"" },
+          { text: "Intimate — Both eyes closed, just breathing", pose: "Ask them to close eyes, touch, and just breathe together for 30 seconds. Don't speak. Then shoot.", tech: "85mm f/1.8. Very quiet. Let the moment settle before you shoot.", pun: "\"The world stops for 30 seconds. Shoot in it.\"" },
         ]},
       ]},
       { label: "Details", sections: [
-        { emoji: "🌅", title: "Environmental", items: [
-          { text: "Venue backdrop — wide establishing", pose: "Couple small in frame — environment tells the story. Place them at natural thirds.", tech: "24–35mm. f/5.6–8.0. Shoot at golden hour if possible." },
-          { text: "Couple with venue architecture", pose: "Use arches, columns, doorways as natural frames around couple.", tech: "35–50mm. f/2.8. Focus on couple, let architecture frame softly." },
-          { text: "Reflection shot if available", pose: "Water, mirror, window — position couple so reflection is clean.", tech: "Focus on couple OR reflection — pick one. f/2.8–4.0." },
-          { text: "Unique location feature", pose: "Identify one detail of the venue that tells their story. Build a shot around it.", tech: "Varies by location. Look for leading lines, light, texture." },
+        { emoji: "🌅", title: "Couple Detail Shots", items: [
+          { text: "Rings together on natural surface", pose: "Both rings placed together on wood, stone, petals, or bark. Look for texture and color contrast.", tech: "Macro or 85mm. f/2.0–2.8. Side natural light. Watch for reflections in stones.", pun: "\"Two circles. One promise. And a LOT of carats.\"" },
+          { text: "Bouquet detail with dress fabric", pose: "Lay bouquet partially on dress fabric or against the train. Let flowers and lace interact.", tech: "85mm f/2.0. Natural light overhead or window. f/2.5 for soft dress background.", pun: "\"Flora meets fashion. Both cost a fortune and both are worth it.\"" },
+          { text: "Bride's shoes on venue surface", pose: "Place shoes on an interesting surface — wooden floor, cobblestone, grass, marble. One standing, one slightly tipped.", tech: "Low angle. 50–85mm. f/2.0. Let venue texture tell the location story.", pun: "\"The shoes that will be retired to a shelf within 2 hours. Photograph them in their prime.\"" },
+          { text: "Veil in motion — wind or movement", pose: "Ask bride to toss veil up gently or find natural wind. Capture the float and movement.", tech: "Fast shutter 1/1000+. f/2.8. Burst mode. Look for clean sky or dark background behind.", pun: "\"The veil has its own personality. Let it perform.\"" },
+          { text: "Groom's boutonniere close-up on lapel", pose: "Shoot tight on lapel detail — boutonniere, pocket square if present, suit texture.", tech: "Macro or 85mm f/2.0. Shoot from slightly above or straight on. Clean light.", pun: "\"A single flower that somehow makes the whole suit make sense.\"" },
         ]},
       ]},
       { label: "Candids", sections: [
         { emoji: "❤️", title: "Authentic Moments", items: [
-          { text: "First look reaction", pose: "Tap groom's shoulder when bride approaches. Stay on his face until he turns.", tech: "Two angles if possible. 85mm each. Pre-focus and wait." },
-          { text: "Couple reading vows privately", pose: "Step back. Let them have the moment. Capture hands shaking, tears forming.", tech: "85–135mm. f/2.0. Silent and still." },
-          { text: "Spontaneous kiss", pose: "After a laugh or emotional moment, they often kiss naturally. Be ready.", tech: "Always be ready between poses. f/2.0." },
-          { text: "Couple whispering to each other", pose: "Between shots, don't always call cut — stay shooting while they relax.", tech: "85mm f/2.0. Candid distance." },
-          { text: "Bride fixing groom's tie or boutonniere", pose: "Ask bride to check groom's tie before portrait session — capture the domestic tenderness.", tech: "35–50mm. f/2.0–2.8. Close and intimate framing." },
+          { text: "First look reaction", pose: "Tap groom's shoulder when bride approaches. Stay on his face until he turns.", tech: "Two angles if possible. 85mm each. Pre-focus and wait.", pun: "\"He's seen her a thousand times. He's never seen her like this.\"" },
+          { text: "Couple reading vows privately", pose: "Step back. Let them have the moment. Capture shaking hands, forming tears.", tech: "85–135mm. f/2.0. Silent and still.", pun: "\"Private vows, publicly photographed. Tastefully.\"" },
+          { text: "Spontaneous kiss", pose: "After a laugh or emotional moment, they often kiss naturally. Be ready always.", tech: "Always ready between poses. f/2.0. Continuous AF on.", pun: "\"The unplanned kiss is always better than the planned one.\"" },
+          { text: "Couple whispering to each other", pose: "Between shots, don't always call cut — keep shooting while they relax.", tech: "85mm f/2.0. Candid distance. Don't interrupt.", pun: "\"Whatever they're saying, it's between them. Your job is just to document the smile it causes.\"" },
+          { text: "Bride fixing groom's tie or boutonniere", pose: "Ask bride to check groom's tie before portrait session — capture the domestic tenderness.", tech: "35–50mm. f/2.0–2.8. Close and intimate framing.", pun: "\"A preview of 50 years of fixing his collar before he walks out the door.\"" },
         ]},
       ]}
     ]
@@ -270,37 +290,37 @@ const data = [
     categories: [
       { label: "Portraits", sections: [
         { emoji: "💃", title: "Key Moments", items: [
-          { text: "Grand entrance — couple walking in", pose: "Position at end of entrance path. Capture them mid-stride, joy on faces.", tech: "35mm. f/2.8. High ISO for indoor. Fast shutter 1/250+." },
-          { text: "First dance — wide shot", pose: "Capture full dance floor and couple together. Include guests watching.", tech: "35mm f/2.8. Expose for couple — let edges fall dark." },
-          { text: "First dance — close-up of faces", pose: "Move in when they slow down. Look for a whisper or forehead touch moment.", tech: "85mm f/2.0. Focus on faces. Watch for motion blur — 1/160+." },
-          { text: "Father-daughter dance", pose: "Capture dad's face especially. Also get bride looking at him.", tech: "85mm f/2.0. Same as first dance approach." },
-          { text: "Mother-son dance", pose: "Mom looking up at groom — powerful image. Watch for tears.", tech: "85mm f/2.0." },
-          { text: "Couple during cake cutting", pose: "Get close for hand-over-hand cutting. Then step back for the feed.", tech: "50mm f/2.8. Be ready for the smash — it happens fast." },
-          { text: "Bouquet toss", pose: "Shoot from behind bride facing crowd. Also capture winner's reaction.", tech: "35mm f/2.8. Fast shutter. Burst mode." },
-          { text: "Couple's last dance or exit", pose: "For exit — line both sides, capture couple running through. Backlight sparklers.", tech: "35mm. High ISO. f/2.8. Fast shutter for sparkler blur effect." },
+          { text: "Grand entrance — couple walking in", pose: "Position at end of entrance path. Couple mid-stride, joy on faces.", tech: "35mm. f/2.8. High ISO for indoor. Fast shutter 1/250+.", pun: "\"Ladies and gentlemen, for the first time as a married couple — they have entered the building.\"" },
+          { text: "First dance — wide shot", pose: "Full dance floor and couple together. Include guests watching.", tech: "35mm f/2.8. Expose for couple — let edges fall dark.", pun: "\"They practiced this. Probably once. It's going to be perfect anyway.\"" },
+          { text: "First dance — close-up of faces", pose: "Move in when they slow down. Look for whisper or forehead touch.", tech: "85mm f/2.0. Focus on faces. 1/160+ to prevent blur.", pun: "\"The song they'll never hear the same way again for the rest of their lives.\"" },
+          { text: "Father-daughter dance", pose: "Capture dad's face especially. Also bride looking at him.", tech: "85mm f/2.0. Same as first dance approach.", pun: "\"He's been dreading this song for 20 years. Now he never wants it to end.\"" },
+          { text: "Mother-son dance", pose: "Mom looking up at groom — powerful image. Watch for tears.", tech: "85mm f/2.0.", pun: "\"She knew he'd be this tall someday. She just didn't think it'd happen this fast.\"" },
+          { text: "Couple during cake cutting", pose: "Close for hand-over-hand cutting. Then step back for the feed.", tech: "50mm f/2.8. Be ready for the smash — it happens fast.", pun: "\"The one moment of the day where it's acceptable to put food in someone's face.\"" },
+          { text: "Bouquet toss", pose: "Shoot from behind bride facing crowd. Also capture winner's reaction.", tech: "35mm f/2.8. Fast shutter. Burst mode.", pun: "\"Chaos in floral form. Stay on burst and pray.\"" },
+          { text: "Couple's last dance or exit", pose: "For exit — line both sides, couple running through. Backlight sparklers.", tech: "35mm. High ISO. f/2.8. Fast shutter for sparkler light trail.", pun: "\"They arrived as guests. They leave as legends.\"" },
         ]},
       ]},
       { label: "Details", sections: [
         { emoji: "🕯️", title: "Reception Details", items: [
-          { text: "Table settings — wide overhead", pose: "Shoot before guests arrive. Center table in frame. Include all place settings.", tech: "Wide lens from highest point available. f/5.6." },
-          { text: "Centerpieces close-up", pose: "Shoot through candles or adjacent florals for depth.", tech: "85mm f/2.0. Candles in foreground create warmth." },
-          { text: "Wedding cake — full shot", pose: "Capture before cutting. Include topper and any floral details.", tech: "50mm f/2.8–4.0. Even light — watch for harsh shadows." },
-          { text: "Cake detail — flowers, topper", pose: "Move in close on most intricate tier.", tech: "Macro or 85mm. f/2.0–2.5." },
-          { text: "Seating chart or signage", pose: "Include florals or venue context in background.", tech: "50mm f/2.8. Ensure text is readable — f/4.0 if needed." },
-          { text: "Favors or place cards", pose: "Arrange a small cluster — don't shoot the whole table scatter.", tech: "85mm f/2.0. Tight and styled." },
-          { text: "Sweetheart table setup", pose: "Before couple sits — include chairs, florals, full table detail.", tech: "35–50mm f/2.8. Wide enough for both chairs." },
-          { text: "Dance floor lighting", pose: "Look for light patterns on empty or full dance floor.", tech: "Wide angle. High ISO. f/2.8. Long exposure for light trails if empty." },
+          { text: "Table settings — wide overhead", pose: "Before guests arrive. Center table in frame. Include all place settings.", tech: "Wide lens from highest point available. f/5.6.", pun: "\"Hours of planning. Seconds before someone moves the centerpiece.\"" },
+          { text: "Centerpieces close-up", pose: "Shoot through candles or adjacent florals for depth.", tech: "85mm f/2.0. Candles in foreground create warmth.", pun: "\"Someone spent 3 weeks deciding on these flowers. Honor that.\"" },
+          { text: "Wedding cake — full shot", pose: "Before cutting. Include topper and floral details.", tech: "50mm f/2.8–4.0. Even light — watch for harsh shadows.", pun: "\"The most beautiful thing that will be destroyed before 9pm.\"" },
+          { text: "Cake detail — flowers, topper", pose: "Move in close on most intricate tier.", tech: "Macro or 85mm. f/2.0–2.5.", pun: "\"Edible art. Temporary masterpiece. Eternal photo.\"" },
+          { text: "Seating chart or signage", pose: "Include florals or venue context in background.", tech: "50mm f/2.8. Ensure text readable — f/4.0 if needed.", pun: "\"The document that caused 3 family arguments and 47 seating revisions.\"" },
+          { text: "Favors or place cards", pose: "Arrange a small cluster — don't shoot the whole table scatter.", tech: "85mm f/2.0. Tight and styled.", pun: "\"The things 30% of guests will leave behind accidentally on purpose.\"" },
+          { text: "Sweetheart table setup", pose: "Before couple sits — include chairs, florals, full table detail.", tech: "35–50mm f/2.8. Wide enough for both chairs.", pun: "\"The most decorated table in the room. They'll eat maybe 4 bites at it.\"" },
+          { text: "Dance floor lighting", pose: "Look for light patterns on empty or full dance floor.", tech: "Wide angle. High ISO. f/2.8. Long exposure for light trails if empty.", pun: "\"Before the chaos. Or during it. Either works.\"" },
         ]},
       ]},
       { label: "Candids", sections: [
         { emoji: "🎉", title: "Party Moments", items: [
-          { text: "Toasts — speaker & couple's reaction", pose: "Split attention: speaker wide, then swing to couple's face during key moments.", tech: "Two camera bodies ideal. 35mm on speaker, 85mm on couple." },
-          { text: "Guests dancing", pose: "Get low, shoot up into dancers. Look for arms raised, expressions of joy.", tech: "35mm f/2.8. High ISO. Fast shutter. Wide open." },
-          { text: "Couple sneaking a private moment", pose: "If you spot them stepping away — follow quietly. Don't interrupt.", tech: "85mm from distance. f/2.0. Available light only." },
-          { text: "Kids on dance floor", pose: "Get to their level. Let them perform — they always will.", tech: "35mm f/2.8. Fast shutter 1/500+. Burst mode." },
-          { text: "Older guests dancing", pose: "These are often the most joyful shots. Watch for couples who've been married 40+ years.", tech: "35–50mm f/2.8. Be unobtrusive and patient." },
-          { text: "Friends laughing at table", pose: "Shoot from slightly above table level. Capture full group reaction.", tech: "35mm f/2.8. Include table details in foreground." },
-          { text: "Couple watching guests enjoy themselves", pose: "Find the moment they step back and take it all in together. Pure contentment.", tech: "85mm from across room. f/2.0. Don't interrupt." },
+          { text: "Toasts — speaker & couple's reaction", pose: "Split attention: speaker wide, then swing to couple's face at key moments.", tech: "Two bodies ideal. 35mm on speaker, 85mm on couple.", pun: "\"The best toasts make the couple laugh AND cry. Aim for both.\"" },
+          { text: "Guests dancing", pose: "Get low, shoot up into dancers. Arms raised, expressions of joy.", tech: "35mm f/2.8. High ISO. Fast shutter. Wide open.", pun: "\"This is what the open bar was for. Shoot accordingly.\"" },
+          { text: "Couple sneaking a private moment", pose: "If you spot them stepping away — follow quietly. Don't interrupt.", tech: "85mm from distance. f/2.0. Available light only.", pun: "\"They snuck away. Follow them. Quietly. This is the shot.\"" },
+          { text: "Kids on dance floor", pose: "Get to their level. Let them perform.", tech: "35mm f/2.8. Fast shutter 1/500+. Burst mode.", pun: "\"No self-consciousness. No inhibitions. Pure joy. These kids get it.\"" },
+          { text: "Older guests dancing", pose: "These are often the most joyful shots. Watch for couples married 40+ years.", tech: "35–50mm f/2.8. Be unobtrusive and patient.", pun: "\"The couples who've been doing this for 50 years. Watch and learn.\"" },
+          { text: "Friends laughing at table", pose: "Slightly above table level. Capture full group reaction.", tech: "35mm f/2.8. Include table details in foreground.", pun: "\"This is what they came for. The laughing, the stories, each other.\"" },
+          { text: "Couple watching guests enjoy themselves", pose: "Find the moment they step back and take it all in. Pure contentment.", tech: "85mm from across room. f/2.0. Don't interrupt.", pun: "\"They planned all of this for the people they love. Watch them watch it work.\"" },
         ]},
       ]}
     ]
@@ -423,6 +443,7 @@ data.forEach((page, idx) => {
             <div class="prompts">
               ${item.pose ? `<div class="prompt pose"><span class="prompt-tag">Pose</span>${item.pose}</div>` : ''}
               ${item.tech ? `<div class="prompt tech"><span class="prompt-tag">Tech</span>${item.tech}</div>` : ''}
+              ${item.pun ? `<div class="prompt pun"><span class="prompt-tag">Pun</span>${item.pun}</div>` : ''}
             </div>
           </div>
         `;
