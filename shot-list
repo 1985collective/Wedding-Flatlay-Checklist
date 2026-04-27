@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding Shot List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f0f;
+      --card: #1a1a1a;
+      --border: #2e2e2e;
+      --gold: #c9a96e;
+      --gold-light: #e8c990;
+      --text: #f0ece4;
+      --text-muted: #7a7060;
+      --pose: #a8c4a2;
+      --tech: #8ab4d4;
+    }
+    body { min-height: 100vh; background: var(--bg); font-family: 'DM Sans', sans-serif; padding-bottom: 80px; color: var(--text); }
+    header { padding: 52px 24px 44px; text-align: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, #1a1510 0%, #0f0f0f 100%); }
+    .header-eyebrow { font-size: 10px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; }
+    header h1 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 36px; color: var(--text); line-height: 1.15; }
+    header h1 em { font-style: italic; color: var(--gold-light); }
+    .header-sub { margin-top: 10px; font-size: 12px; color: var(--text-muted); letter-spacing: 0.08em; }
+    .progress-wrap { margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .progress-ring-wrap { position: relative; width: 64px; height: 64px; }
+    .progress-ring { transform: rotate(-90deg); }
+    .progress-ring-bg { fill: none; stroke: #2a2a2a; stroke-width: 4; }
+    .progress-ring-fill { fill: none; stroke: var(--gold); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 163; stroke-dashoffset: 163; transition: stroke-dashoffset 0.5s ease; }
+    .progress-pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: var(--gold-light); }
+    .progress-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; }
+    .legend { display: flex; gap: 16px; justify-content: center; margin-top: 14px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text-muted); letter-spacing: 0.05em; }
+    .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--border); scrollbar-width: none; background: #111; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab { flex-shrink: 0; padding: 14px 18px; font-size: 11px; font-family: 'DM Sans', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
+    .tab.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+    .content { max-width: 560px; margin: 0 auto; padding: 0 16px; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .cat-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin: 28px 0 12px 4px; }
+    .section { background: var(--card); border-radius: 14px; overflow: hidden; margin-bottom: 12px; border: 1px solid var(--border); }
+    .section-header { display: flex; align-items: center; justify-content: space-between; padding: 15px 18px; cursor: pointer; border-bottom: 1px solid var(--border); user-select: none; -webkit-tap-highlight-color: transparent; }
+    .section-title { display: flex; align-items: center; gap: 10px; }
+    .section-emoji { font-size: 18px; }
+    .section-name { font-size: 14px; font-weight: 500; color: var(--text); }
+    .section-meta { display: flex; align-items: center; gap: 8px; }
+    .section-count { font-size: 10px; color: var(--gold); background: rgba(201,169,110,0.1); border-radius: 20px; padding: 2px 8px; }
+    .section-arrow { font-size: 18px; color: var(--text-muted); transition: transform 0.25s; }
+    .section.closed .section-arrow { transform: rotate(-90deg); }
+    .section.closed .section-header { border-bottom: none; }
+    .section.closed .section-items { display: none; }
+    .item { display: flex; align-items: flex-start; gap: 13px; padding: 13px 18px; border-bottom: 1px solid #1f1f1f; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transition: background 0.15s; }
+    .item:last-child { border-bottom: none; }
+    .item.done { background: #161616; }
+    .checkbox { width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid #3a3a3a; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .item.done .checkbox { background: var(--gold); border-color: var(--gold); }
+    .checkmark { display: none; width: 11px; height: 11px; }
+    .item.done .checkmark { display: block; }
+    .item-text { flex: 1; }
+    .item-label { font-size: 13.5px; color: var(--text); line-height: 1.4; transition: all 0.2s; }
+    .item.done .item-label { color: var(--text-muted); text-decoration: line-through; }
+    .prompts { margin-top: 7px; display: flex; flex-direction: column; gap: 4px; }
+    .prompt { font-size: 11px; line-height: 1.45; padding: 4px 8px; border-radius: 5px; }
+    .prompt.pose { color: var(--pose); background: rgba(168,196,162,0.08); border-left: 2px solid rgba(168,196,162,0.3); }
+    .prompt.tech { color: var(--tech); background: rgba(138,180,212,0.08); border-left: 2px solid rgba(138,180,212,0.3); }
+    .prompt-tag { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; margin-right: 4px; }
+    .footer { text-align: center; max-width: 560px; margin: 0 auto; padding: 0 16px; }
+    .complete-msg { display: none; background: linear-gradient(135deg, #2a1f0a, #3d2e10); border: 1px solid var(--gold); color: var(--gold-light); border-radius: 14px; padding: 18px 24px; font-size: 14px; margin-top: 28px; }
+    .reset-btn { background: none; border: 1px solid var(--border); border-radius: 10px; padding: 10px 24px; font-size: 12px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 28px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">1985 Collective</div>
+  <h1>Wedding Day<br><em>Shot List</em></h1>
+  <div class="header-sub">Photographer's Reference</div>
+  <div class="progress-wrap">
+    <div class="progress-ring-wrap">
+      <svg class="progress-ring" width="64" height="64" viewBox="0 0 64 64">
+        <circle class="progress-ring-bg" cx="32" cy="32" r="26"/>
+        <circle class="progress-ring-fill" id="ring-fill" cx="32" cy="32" r="26"/>
+      </svg>
+      <div class="progress-pct" id="progress-pct">0%</div>
+    </div>
+    <div class="progress-label" id="progress-label">0 shots captured</div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--pose)"></div> Posing</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--tech)"></div> Technical</div>
+  </div>
+</header>
+
+<div class="tabs" id="tabs"></div>
+<div id="pages"></div>
+
+<div class="footer">
+  <div class="complete-msg" id="complete-msg">✦ All shots captured — beautiful work today.</div>
+  <button class="reset-btn" id="reset-btn" onclick="resetAll()">Reset All</button>
+</div>
+
+<script>
+const data = [
+  {
+    tab: "Getting Ready",
+    categories: [
+      { label: "Portraits", sections: [
+        { emoji: "👰", title: "Bride Portraits", items: [
+          { text: "Bride in robe, natural window light", pose: "Have her stand close to the window, chin slightly down, eyes toward light. Ask her to take a slow breath.", tech: "f/2.0–2.8, expose for her skin, let window blow out slightly." },
+          { text: "Bride getting hair done", pose: "Ask the stylist to pause mid-motion. Have bride close her eyes softly or look down at her hands.", tech: "Shoot wide open f/1.8–2.2. Watch for flyaways catching light." },
+          { text: "Bride getting makeup done", pose: "Capture lips being done — ask MUA to hold brush in place. For eyes, have bride look straight up.", tech: "Macro or 85mm tight. Use available light only, no flash on skin here." },
+          { text: "Bride fully dressed — full length", pose: "Hands relaxed, slight weight shift to one hip. Ask her to walk toward you slowly and stop.", tech: "85mm or 50mm at f/2.0. Full body — include train if present." },
+          { text: "Bride — head & shoulders portrait", pose: "Chin forward and slightly down. Eyes directly into lens. One shoulder angled toward camera.", tech: "85mm f/1.8–2.0. Focus on closest eye." },
+          { text: "Bride looking out window", pose: "Have her stand side-on to window, look outside softly. Hands loosely in front.", tech: "Expose for face, not window. f/2.0, shoot from slightly behind." },
+          { text: "Bride with bridesmaids", pose: "Loose cluster around bride — no stiff lines. Ask them to squeeze in and laugh together.", tech: "Step back, 35mm or 50mm. f/2.8–4.0 to keep group sharp." },
+          { text: "Bride with mom", pose: "Ask mom to help adjust veil or dress. Capture the in-between moment — eyes meeting, touch.", tech: "Stay back, 85mm. Don't interrupt — observe and shoot." },
+        ]},
+        { emoji: "🤵", title: "Groom Portraits", items: [
+          { text: "Groom in suit — full length", pose: "One hand in pocket, other relaxed. Slight turn — 3/4 angle to camera. Strong jaw, look just past lens.", tech: "85mm f/2.0. Find clean background. Watch for wrinkles in jacket." },
+          { text: "Groom — head & shoulders portrait", pose: "Ask him to look off in the distance first, then slowly bring eyes to camera. Gets a natural, confident expression.", tech: "85mm f/1.8. Focus on eyes. Slightly lower angle is flattering for men." },
+          { text: "Groom getting ready — adjusting tie or cufflinks", pose: "Ask him to adjust slowly. Capture hands in detail — rings, cufflinks.", tech: "Get close. 85mm or macro. f/2.0–2.5, focus on hands." },
+          { text: "Groom looking out window", pose: "Profile or 3/4 view. Ask him to think about the moment — genuine stillness.", tech: "Same as bride window shot. Expose for face." },
+          { text: "Groom with best man or groomsmen", pose: "Relaxed poses — lean on wall, hands in pockets. Capture a toast or handshake moment.", tech: "35mm or 50mm. f/2.8. Look for candid laughs." },
+          { text: "Groom with dad", pose: "Handshake turning into a hug works well. Or side by side looking out window.", tech: "Stay back on 85mm. Let the moment happen naturally." },
+        ]},
+      ]},
+      { label: "Details", sections: [
+        { emoji: "💍", title: "Flatlay & Details", items: [
+          { text: "Full flatlay of all bridal items", pose: "Arrange largest items first — dress, shoes, bouquet. Build outward. Keep spacing consistent.", tech: "Shoot directly overhead. f/4.0–5.6 for full sharpness. Use natural light surface." },
+          { text: "Ring close-up on ring dish", pose: "Angle dish slightly. Place ring so stones catch light. Add petals or ribbon for softness.", tech: "Macro or 85mm. f/2.0–2.8. Watch for reflections in stones." },
+          { text: "Shoes detail shot", pose: "Pair them together heel to heel, or one standing one lying. Add bouquet nearby.", tech: "Low angle works well. f/2.0 for dreamy background." },
+          { text: "Invitation suite", pose: "Layer envelope behind card, add wax seal or florals. Keep lines clean and straight.", tech: "Overhead or slight angle. f/4.0 for full text sharpness." },
+          { text: "Jewelry close-ups", pose: "Lay on soft fabric — silk or linen. Space pieces so each reads clearly.", tech: "Macro lens ideal. f/2.8. Watch for reflections on metal." },
+          { text: "Dress hanging — full length", pose: "Hang near window on ornate door, mirror, or clean wall. Fluff train.", tech: "Wide enough to capture full train. f/2.8–4.0. Backlight adds glow." },
+          { text: "Dress detail — lace, buttons, train", pose: "Focus on most intricate section. Ask bride about her favorite dress detail.", tech: "Macro or 85mm tight crop. f/2.0. Let edges fall soft." },
+          { text: "Bouquet close-up", pose: "Hold at waist height or lay on flat surface. Show flowers face-on and from side.", tech: "f/2.0–2.5. Focus on lead blooms. Soft natural light only." },
+          { text: "Perfume + lipstick styled", pose: "Arrange with ribbon or small florals. Perfume standing, lipstick slightly angled.", tech: "f/2.0. Window light from the side creates nice shadows." },
+        ]},
+      ]},
+      { label: "Candids", sections: [
+        { emoji: "✨", title: "Candid Moments", items: [
+          { text: "Bridesmaids laughing together", pose: "Tell them a bad joke or ask them to recreate how the groom proposed. Pure reaction.", tech: "35mm or 50mm. f/2.8. Continuous shooting mode." },
+          { text: "Bride seeing herself in mirror", pose: "Position yourself to capture both bride's face and reflection. Don't direct — observe.", tech: "Include mirror frame in composition. f/2.0–2.8." },
+          { text: "Mom or MOH zipping up dress", pose: "Step back and let it happen. Ask bride to look down at dress during zip.", tech: "85mm from across room. f/2.0. Quiet and unobtrusive." },
+          { text: "Champagne toast", pose: "Ask everyone to raise glasses and look at each other — not camera. Capture clinking.", tech: "Continuous shooting. f/2.8. Watch for backlight on bubbles." },
+          { text: "Bride receiving letter from groom", pose: "Do not interfere. Position for her face as she reads. Tissues ready.", tech: "Long lens 85–135mm. f/2.0. Stay far back." },
+          { text: "Quiet moment before leaving", pose: "Ask everyone to give bride 2 minutes alone. Capture her stillness.", tech: "Wide shot of room context, then tight on face. f/2.0." },
+        ]},
+      ]}
+    ]
+  },
+  {
+    tab: "Ceremony",
+    categories: [
+      { label: "Portraits", sections: [
+        { emoji: "💒", title: "Processional & Altar", items: [
+          { text: "Groom waiting at altar — full length", pose: "Capture him before he sees bride — hands clasped, looking down aisle. Natural anticipation.", tech: "85mm from side or slight angle. f/2.0. Use aisle as leading line." },
+          { text: "Groom's reaction as bride walks in", pose: "Pre-focus on groom's face before bride enters. Do not miss this shot.", tech: "Stay on groom. 85mm. Continuous AF. f/2.0–2.8." },
+          { text: "Bride walking down aisle with escort", pose: "Shoot from altar end — bride walking toward you. Also capture from side for escort hand detail.", tech: "85mm from front. f/2.8. Watch aisle lighting — may need to lift ISO." },
+          { text: "Bride & groom face to face at altar", pose: "Capture both profiles — position yourself at 45° from altar side.", tech: "85mm. f/2.0–2.5. Expose for faces, not bright window behind." },
+          { text: "Ring exchange — close-up of hands", pose: "Get as close as officiant allows. Focus on the moment the ring slides on.", tech: "Move to side for hand angle. f/2.0 macro or 85mm tight." },
+          { text: "First kiss", pose: "Pre-focus. Be ready before 'you may kiss.' Capture dip if they do one.", tech: "Continuous shooting. f/2.8. Have second angle if possible." },
+          { text: "Recessional — couple walking back", pose: "Position at end of aisle. Capture couple coming toward you, guests reacting behind.", tech: "35mm or 50mm. f/2.8. Include guests blurred in background." },
+        ]},
+      ]},
+      { label: "Details", sections: [
+        { emoji: "🌸", title: "Ceremony Details", items: [
+          { text: "Venue — wide establishing shot", pose: "Before guests arrive. Capture full space — altar, seating, florals.", tech: "Wide lens 24–35mm. f/5.6–8.0. Tripod if low light." },
+          { text: "Altar or arch decoration detail", pose: "Shoot through florals for dreamy foreground blur.", tech: "85mm f/2.0. Use florals as foreground element." },
+          { text: "Florals & centerpieces", pose: "Get low and shoot up slightly. Include background context softly.", tech: "f/2.0–2.5. Focus on closest blooms." },
+          { text: "Programs or signage", pose: "Lay program flat on pew or stand with florals nearby.", tech: "f/4.0 for text sharpness. Even, soft light." },
+          { text: "Rings on bible or pillow", pose: "Stack rings or place side by side. Add florals for color.", tech: "Macro or 85mm tight. f/2.0. Watch reflections." },
+          { text: "Candles or ceremony lighting", pose: "Look for candle clusters and shoot through them with subject behind.", tech: "f/1.8–2.0. High ISO if needed. Let candles slightly overexpose." },
+        ]},
+      ]},
+      { label: "Candids", sections: [
+        { emoji: "😢", title: "Emotional Moments", items: [
+          { text: "Parents' reactions during processional", pose: "Watch mother of bride especially. Position near front row before processional starts.", tech: "85mm from aisle. f/2.0. Be ready before bride reaches them." },
+          { text: "Guests wiping tears", pose: "Scan rows during vows. Move quietly. Look for genuine reactions.", tech: "Long lens 135mm if available. f/2.0. Silent shutter if possible." },
+          { text: "Flower girl or ring bearer walking", pose: "Get low — their level. Capture personality. They may not cooperate — shoot fast.", tech: "35–50mm. f/2.8. Burst mode." },
+          { text: "Wedding party reactions at altar", pose: "During vows, pan slowly across wedding party faces. Candid reactions.", tech: "85mm from angle. f/2.0–2.5." },
+          { text: "Couple laughing during vows", pose: "Stay ready — often happens during personal vows. Don't anticipate, just react.", tech: "Continuous shooting. f/2.0." },
+          { text: "Wide shot of full congregation", pose: "Capture from back or elevated position if available. Shows full scale of ceremony.", tech: "24–35mm. f/5.6–8.0. Include altar in frame." },
+        ]},
+      ]}
+    ]
+  },
+  {
+    tab: "Family",
+    categories: [
+      { label: "Portraits", sections: [
+        { emoji: "👨‍👩‍👧", title: "Family Formals", items: [
+          { text: "Bride & groom alone — full length", pose: "Groom behind bride, hands on waist. Both angled slightly, not square to camera.", tech: "85mm f/2.0. Clean background. Check for distractions behind." },
+          { text: "Bride with her parents", pose: "Bride in center, parents on each side. Slight lean in together. Ask for a real hug.", tech: "50–85mm. f/2.8. Even light across all three faces." },
+          { text: "Bride with mom only", pose: "Holding hands or forehead to forehead. Let emotion happen naturally.", tech: "85mm f/2.0. Tight crop. Focus on faces." },
+          { text: "Bride with dad only", pose: "Classic arm-in-arm. Also capture a quiet moment — dad looking at bride.", tech: "85mm f/2.0. Watch dad's expression especially." },
+          { text: "Groom with his parents", pose: "Same as bride parents. Groom center, relaxed arms around parents.", tech: "50–85mm f/2.8." },
+          { text: "Groom with mom only", pose: "Hug or hands held. Mom looking up at groom works beautifully.", tech: "85mm f/2.0." },
+          { text: "Groom with dad only", pose: "Handshake or side-by-side. Ask dad to put arm around groom's shoulder.", tech: "85mm f/2.0." },
+          { text: "Both families together", pose: "Largest group — arrange by height. Couples together. Check everyone is visible.", tech: "35–50mm. f/4.0–5.6. Step back for full group." },
+          { text: "Bride & groom with all siblings", pose: "Relaxed — no strict lines. Suggest a group hug or pile-in.", tech: "35–50mm. f/2.8–4.0." },
+          { text: "Bride & groom with grandparents", pose: "Grandparents seated if needed. Couple kneeling or crouching to their level.", tech: "50mm. f/2.8. Be quick — limit standing time for elderly guests." },
+          { text: "Full wedding party — wide shot", pose: "Groomsmen one side, bridesmaids other. Couple center elevated if possible.", tech: "35mm. f/4.0–5.6. Check all faces visible before shooting." },
+          { text: "Bridesmaids only", pose: "Loose and fun — bouquets up, laugh together. Also do a straight formal.", tech: "50mm f/2.8. Step back for full group." },
+          { text: "Groomsmen only", pose: "Arms crossed or hands in pockets. Relaxed strong poses. Also capture a funny one.", tech: "50mm f/2.8–4.0." },
+          { text: "Bride with bridesmaids", pose: "Bouquets at waist. Bride slightly forward. Tight cluster.", tech: "50mm f/2.8." },
+          { text: "Groom with groomsmen", pose: "Walking toward camera works great — cinematic feel.", tech: "35mm f/2.8. Low angle for drama." },
+        ]},
+      ]},
+      { label: "Details", sections: [
+        { emoji: "💐", title: "Group Details", items: [
+          { text: "Bouquets grouped together", pose: "All bridesmaids hold bouquets close together overhead or in a cluster. Shoot from above.", tech: "Overhead. f/4.0. Colorful and graphic." },
+          { text: "Boutonnieres close-up", pose: "Groomsmen in a line — focus on chest details. Or isolate one on groom.", tech: "85mm f/2.0–2.5. Clean jacket background." },
+          { text: "Wedding party shoes lineup", pose: "All in a row — mix bride heels with groomsmen shoes for contrast.", tech: "Low angle. f/2.8–4.0. Leading line composition." },
+        ]},
+      ]},
+      { label: "Candids", sections: [
+        { emoji: "🤣", title: "In-Between Moments", items: [
+          { text: "Candid laughter between poses", pose: "Tell a terrible pun between setups. Genuine reactions are gold.", tech: "Stay ready on 35–50mm. f/2.8. Continuous mode." },
+          { text: "Kids running or playing", pose: "Let them be kids. Get low to their level. Capture joy and chaos.", tech: "35mm f/2.8. Fast shutter 1/500+. Burst mode." },
+          { text: "Grandparents together", pose: "Holding hands or sharing a quiet moment. Don't over-direct.", tech: "85mm f/2.0. Stay back and observe." },
+          { text: "Siblings goofing around", pose: "Capture the in-between — adjusting ties, whispering, teasing each other.", tech: "35–50mm f/2.8. Be unobtrusive." },
+        ]},
+      ]}
+    ]
+  },
+  {
+    tab: "Couples",
+    categories: [
+      { label: "Portraits", sections: [
+        { emoji: "💑", title: "Couples Session", items: [
+          { text: "Walking together — full length", pose: "Ask them to walk slowly past you, talking to each other — not the camera. Natural movement.", tech: "35–50mm. f/2.0–2.8. Pan slightly with them." },
+          { text: "Forehead touch — intimate close-up", pose: "Ask them to close eyes, touch foreheads, and just breathe. Give them 10 seconds of silence.", tech: "85mm f/1.8–2.0. Very tight. Focus on point of contact." },
+          { text: "Dip or twirl pose", pose: "Groom: right hand on her back, left takes her hand. Dip on exhale. Warn them first.", tech: "Wide enough to capture full extension. f/2.8. Fast shutter." },
+          { text: "Golden hour backlit shot", pose: "Sun behind them, slight rim light. Ask them to touch foreheads or share a kiss.", tech: "Expose for faces, let background blow. f/2.0. Use lens flare intentionally." },
+          { text: "Looking at each other — candid", pose: "Ask groom to whisper something he loves about her in her ear. Capture her reaction.", tech: "85mm f/2.0. Stay back. Don't interrupt the moment." },
+          { text: "Hands together — ring detail", pose: "Bride's hand on top of groom's. Both hands relaxed, slightly cupped.", tech: "Macro or 85mm tight. f/2.0. Side light to show ring depth." },
+          { text: "Silhouette shot", pose: "Position couple against bright sky or window. Have them kiss or touch foreheads.", tech: "Expose for sky — faces become silhouette. f/8.0–11. Shoot slightly upward." },
+          { text: "Sitting together — relaxed pose", pose: "Find steps, bench, or ground. Groom legs out, bride leaning into him. Relaxed and real.", tech: "Get low — eye level with them. 85mm f/2.0." },
+          { text: "Laughing together naturally", pose: "Ask them: what is the most embarrassing thing that's happened to you as a couple? Pure laugh reaction.", tech: "35–50mm. f/2.0–2.8. Burst mode." },
+          { text: "Walking away — rear view", pose: "Ask them to walk away holding hands. Capture dress train and movement.", tech: "35–50mm f/2.0. Include environment for context." },
+        ]},
+      ]},
+      { label: "Details", sections: [
+        { emoji: "🌅", title: "Environmental", items: [
+          { text: "Venue backdrop — wide establishing", pose: "Couple small in frame — environment tells the story. Place them at natural thirds.", tech: "24–35mm. f/5.6–8.0. Shoot at golden hour if possible." },
+          { text: "Couple with venue architecture", pose: "Use arches, columns, doorways as natural frames around couple.", tech: "35–50mm. f/2.8. Focus on couple, let architecture frame softly." },
+          { text: "Reflection shot if available", pose: "Water, mirror, window — position couple so reflection is clean.", tech: "Focus on couple OR reflection — pick one. f/2.8–4.0." },
+          { text: "Unique location feature", pose: "Identify one detail of the venue that tells their story. Build a shot around it.", tech: "Varies by location. Look for leading lines, light, texture." },
+        ]},
+      ]},
+      { label: "Candids", sections: [
+        { emoji: "❤️", title: "Authentic Moments", items: [
+          { text: "First look reaction", pose: "Tap groom's shoulder when bride approaches. Stay on his face until he turns.", tech: "Two angles if possible. 85mm each. Pre-focus and wait." },
+          { text: "Couple reading vows privately", pose: "Step back. Let them have the moment. Capture hands shaking, tears forming.", tech: "85–135mm. f/2.0. Silent and still." },
+          { text: "Spontaneous kiss", pose: "After a laugh or emotional moment, they often kiss naturally. Be ready.", tech: "Always be ready between poses. f/2.0." },
+          { text: "Couple whispering to each other", pose: "Between shots, don't always call cut — stay shooting while they relax.", tech: "85mm f/2.0. Candid distance." },
+          { text: "Bride fixing groom's tie or boutonniere", pose: "Ask bride to check groom's tie before portrait session — capture the domestic tenderness.", tech: "35–50mm. f/2.0–2.8. Close and intimate framing." },
+        ]},
+      ]}
+    ]
+  },
+  {
+    tab: "Reception",
+    categories: [
+      { label: "Portraits", sections: [
+        { emoji: "💃", title: "Key Moments", items: [
+          { text: "Grand entrance — couple walking in", pose: "Position at end of entrance path. Capture them mid-stride, joy on faces.", tech: "35mm. f/2.8. High ISO for indoor. Fast shutter 1/250+." },
+          { text: "First dance — wide shot", pose: "Capture full dance floor and couple together. Include guests watching.", tech: "35mm f/2.8. Expose for couple — let edges fall dark." },
+          { text: "First dance — close-up of faces", pose: "Move in when they slow down. Look for a whisper or forehead touch moment.", tech: "85mm f/2.0. Focus on faces. Watch for motion blur — 1/160+." },
+          { text: "Father-daughter dance", pose: "Capture dad's face especially. Also get bride looking at him.", tech: "85mm f/2.0. Same as first dance approach." },
+          { text: "Mother-son dance", pose: "Mom looking up at groom — powerful image. Watch for tears.", tech: "85mm f/2.0." },
+          { text: "Couple during cake cutting", pose: "Get close for hand-over-hand cutting. Then step back for the feed.", tech: "50mm f/2.8. Be ready for the smash — it happens fast." },
+          { text: "Bouquet toss", pose: "Shoot from behind bride facing crowd. Also capture winner's reaction.", tech: "35mm f/2.8. Fast shutter. Burst mode." },
+          { text: "Couple's last dance or exit", pose: "For exit — line both sides, capture couple running through. Backlight sparklers.", tech: "35mm. High ISO. f/2.8. Fast shutter for sparkler blur effect." },
+        ]},
+      ]},
+      { label: "Details", sections: [
+        { emoji: "🕯️", title: "Reception Details", items: [
+          { text: "Table settings — wide overhead", pose: "Shoot before guests arrive. Center table in frame. Include all place settings.", tech: "Wide lens from highest point available. f/5.6." },
+          { text: "Centerpieces close-up", pose: "Shoot through candles or adjacent florals for depth.", tech: "85mm f/2.0. Candles in foreground create warmth." },
+          { text: "Wedding cake — full shot", pose: "Capture before cutting. Include topper and any floral details.", tech: "50mm f/2.8–4.0. Even light — watch for harsh shadows." },
+          { text: "Cake detail — flowers, topper", pose: "Move in close on most intricate tier.", tech: "Macro or 85mm. f/2.0–2.5." },
+          { text: "Seating chart or signage", pose: "Include florals or venue context in background.", tech: "50mm f/2.8. Ensure text is readable — f/4.0 if needed." },
+          { text: "Favors or place cards", pose: "Arrange a small cluster — don't shoot the whole table scatter.", tech: "85mm f/2.0. Tight and styled." },
+          { text: "Sweetheart table setup", pose: "Before couple sits — include chairs, florals, full table detail.", tech: "35–50mm f/2.8. Wide enough for both chairs." },
+          { text: "Dance floor lighting", pose: "Look for light patterns on empty or full dance floor.", tech: "Wide angle. High ISO. f/2.8. Long exposure for light trails if empty." },
+        ]},
+      ]},
+      { label: "Candids", sections: [
+        { emoji: "🎉", title: "Party Moments", items: [
+          { text: "Toasts — speaker & couple's reaction", pose: "Split attention: speaker wide, then swing to couple's face during key moments.", tech: "Two camera bodies ideal. 35mm on speaker, 85mm on couple." },
+          { text: "Guests dancing", pose: "Get low, shoot up into dancers. Look for arms raised, expressions of joy.", tech: "35mm f/2.8. High ISO. Fast shutter. Wide open." },
+          { text: "Couple sneaking a private moment", pose: "If you spot them stepping away — follow quietly. Don't interrupt.", tech: "85mm from distance. f/2.0. Available light only." },
+          { text: "Kids on dance floor", pose: "Get to their level. Let them perform — they always will.", tech: "35mm f/2.8. Fast shutter 1/500+. Burst mode." },
+          { text: "Older guests dancing", pose: "These are often the most joyful shots. Watch for couples who've been married 40+ years.", tech: "35–50mm f/2.8. Be unobtrusive and patient." },
+          { text: "Friends laughing at table", pose: "Shoot from slightly above table level. Capture full group reaction.", tech: "35mm f/2.8. Include table details in foreground." },
+          { text: "Couple watching guests enjoy themselves", pose: "Find the moment they step back and take it all in together. Pure contentment.", tech: "85mm from across room. f/2.0. Don't interrupt." },
+        ]},
+      ]}
+    ]
+  }
+];
+
+const state = {};
+let totalItems = 0;
+
+data.forEach(page => {
+  page.categories.forEach(cat => {
+    cat.sections.forEach(sec => {
+      sec.items.forEach(item => {
+        const key = page.tab + '__' + sec.title + '__' + item.text;
+        state[key] = false;
+        totalItems++;
+      });
+    });
+  });
+});
+
+function updateProgress() {
+  const checked = Object.values(state).filter(Boolean).length;
+  const pct = Math.round((checked / totalItems) * 100);
+  const offset = 163 - (pct / 100) * 163;
+  document.getElementById('ring-fill').style.strokeDashoffset = offset;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-label').textContent = checked + ' of ' + totalItems + ' shots captured';
+  document.getElementById('complete-msg').style.display = pct === 100 ? 'block' : 'none';
+  document.getElementById('reset-btn').style.display = pct === 100 ? 'none' : 'inline-block';
+  data.forEach(page => {
+    page.categories.forEach(cat => {
+      cat.sections.forEach(sec => {
+        const done = sec.items.filter(i => state[page.tab + '__' + sec.title + '__' + i.text]).length;
+        const el = document.getElementById('cnt-' + page.tab + sec.title);
+        if (el) el.textContent = done + '/' + sec.items.length;
+      });
+    });
+  });
+}
+
+function toggleItem(key, el) {
+  state[key] = !state[key];
+  el.classList.toggle('done', state[key]);
+  updateProgress();
+}
+
+function toggleSection(id) {
+  document.getElementById(id).classList.toggle('closed');
+}
+
+function switchTab(idx) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  document.querySelectorAll('.page').forEach((p, i) => p.classList.toggle('active', i === idx));
+}
+
+function resetAll() {
+  Object.keys(state).forEach(k => state[k] = false);
+  document.querySelectorAll('.item').forEach(el => el.classList.remove('done'));
+  updateProgress();
+}
+
+const tabsEl = document.getElementById('tabs');
+data.forEach((page, idx) => {
+  const btn = document.createElement('button');
+  btn.className = 'tab' + (idx === 0 ? ' active' : '');
+  btn.textContent = page.tab;
+  btn.addEventListener('click', () => switchTab(idx));
+  tabsEl.appendChild(btn);
+});
+
+const pagesEl = document.getElementById('pages');
+data.forEach((page, idx) => {
+  const pageEl = document.createElement('div');
+  pageEl.className = 'page' + (idx === 0 ? ' active' : '');
+  const contentEl = document.createElement('div');
+  contentEl.className = 'content';
+
+  page.categories.forEach(cat => {
+    const catLabel = document.createElement('div');
+    catLabel.className = 'cat-label';
+    catLabel.textContent = cat.label;
+    contentEl.appendChild(catLabel);
+
+    cat.sections.forEach(sec => {
+      const secId = 'sec-' + page.tab + sec.title;
+      const secEl = document.createElement('div');
+      secEl.className = 'section';
+      secEl.id = secId;
+
+      const header = document.createElement('div');
+      header.className = 'section-header';
+      header.innerHTML = `
+        <div class="section-title">
+          <span class="section-emoji">${sec.emoji}</span>
+          <span class="section-name">${sec.title}</span>
+        </div>
+        <div class="section-meta">
+          <span class="section-count" id="cnt-${page.tab + sec.title}">0/${sec.items.length}</span>
+          <span class="section-arrow">›</span>
+        </div>
+      `;
+      header.addEventListener('click', () => toggleSection(secId));
+
+      const itemsEl = document.createElement('div');
+      itemsEl.className = 'section-items';
+
+      sec.items.forEach(item => {
+        const key = page.tab + '__' + sec.title + '__' + item.text;
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="checkbox">
+            <svg class="checkmark" viewBox="0 0 11 11" fill="none">
+              <path d="M1.5 5.5l3 3 5-5" stroke="#0f0f0f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="item-text">
+            <div class="item-label">${item.text}</div>
+            <div class="prompts">
+              ${item.pose ? `<div class="prompt pose"><span class="prompt-tag">Pose</span>${item.pose}</div>` : ''}
+              ${item.tech ? `<div class="prompt tech"><span class="prompt-tag">Tech</span>${item.tech}</div>` : ''}
+            </div>
+          </div>
+        `;
+        div.addEventListener('click', () => toggleItem(key, div));
+        itemsEl.appendChild(div);
+      });
+
+      secEl.appendChild(header);
+      secEl.appendChild(itemsEl);
+      contentEl.appendChild(secEl);
+    });
+  });
+
+  pageEl.appendChild(contentEl);
+  pagesEl.appendChild(pageEl);
+});
+
+updateProgress();
+</script>
+
+</body>
+</html>
