@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/shot-list",
+      "has": [
+        {
+          "type": "host",
+          "value": "shotlist.1985collective.com"
+        }
+      ]
+    }
+  ]
+}
