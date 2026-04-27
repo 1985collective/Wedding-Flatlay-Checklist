@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Shot List</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f0f;--card:#1a1a1a;--border:#2e2e2e;--gold:#c9a96e;--gold-light:#e8c990;--text:#f0ece4;--muted:#7a7060;--pose:#a8c4a2;--tech:#8ab4d4;--pun:#d4a8c4}
+body{min-height:100vh;background:var(--bg);font-family:'DM Sans',sans-serif;padding-bottom:80px;color:var(--text)}
+header{padding:52px 24px 44px;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#1a1510 0%,#0f0f0f 100%)}
+.eyebrow{font-size:10px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:12px}
+h1{font-family:'Playfair Display',serif;font-weight:400;font-size:36px;color:var(--text);line-height:1.15}
+h1 em{font-style:italic;color:var(--gold-light)}
+.prog-wrap{margin-top:28px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.ring-wrap{position:relative;width:64px;height:64px}
+.ring{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:#2a2a2a;stroke-width:4}
+.ring-fill{fill:none;stroke:var(--gold);stroke-width:4;stroke-linecap:round;stroke-dasharray:163;stroke-dashoffset:163;transition:stroke-dashoffset .5s ease}
+.prog-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:var(--gold-light)}
+.prog-lbl{font-size:11px;color:var(--muted);letter-spacing:.08em}
+.legend{display:flex;gap:14px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%}
+.tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);scrollbar-width:none;background:#111}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:14px 18px;font-size:11px;font-family:'DM Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s}
+.tab.active{color:var(--gold-light);border-bottom-color:var(--gold)}
+.content{max-width:560px;margin:0 auto;padding:0 16px}
+.page{display:none}
+.page.active{display:block}
+.cat-lbl{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin:28px 0 12px 4px}
+.sec{background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:12px;border:1px solid var(--border)}
+.sec-head{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;cursor:pointer;border-bottom:1px solid var(--border);user-select:none;-webkit-tap-highlight-color:transparent}
+.sec-title{display:flex;align-items:center;gap:10px}
+.sec-emoji{font-size:18px}
+.sec-name{font-size:14px;font-weight:500;color:var(--text)}
+.sec-meta{display:flex;align-items:center;gap:8px}
+.sec-count{font-size:10px;color:var(--gold);background:rgba(201,169,110,.1);border-radius:20px;padding:2px 8px}
+.sec-arrow{font-size:18px;color:var(--muted);transition:transform .25s}
+.sec.closed .sec-arrow{transform:rotate(-90deg)}
+.sec.closed .sec-head{border-bottom:none}
+.sec.closed .sec-items{display:none}
+.item{display:flex;align-items:flex-start;gap:13px;padding:13px 18px;border-bottom:1px solid #1f1f1f;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;transition:background .15s}
+.item:last-child{border-bottom:none}
+.item.done{background:#161616}
+.chk{width:20px;height:20px;border-radius:5px;border:1.5px solid #3a3a3a;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.item.done .chk{background:var(--gold);border-color:var(--gold)}
+.checkmark{display:none;width:11px;height:11px}
+.item.done .checkmark{display:block}
+.item-text{flex:1}
+.item-lbl{font-size:13.5px;color:var(--text);line-height:1.4;transition:all .2s}
+.item.done .item-lbl{color:var(--muted);text-decoration:line-through}
+.prompts{margin-top:7px;display:flex;flex-direction:column;gap:4px}
+.prompt{font-size:11px;line-height:1.45;padding:4px 8px;border-radius:5px}
+.prompt.pose{color:var(--pose);background:rgba(168,196,162,.08);border-left:2px solid rgba(168,196,162,.3)}
+.prompt.tech{color:var(--tech);background:rgba(138,180,212,.08);border-left:2px solid rgba(138,180,212,.3)}
+.prompt.pun{color:var(--pun);background:rgba(212,168,196,.08);border-left:2px solid rgba(212,168,196,.3)}
+.ptag{font-size:9px;letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin-right:4px}
+.footer{text-align:center;max-width:560px;margin:0 auto;padding:0 16px}
+.done-msg{display:none;background:linear-gradient(135deg,#2a1f0a,#3d2e10);border:1px solid var(--gold);color:var(--gold-light);border-radius:14px;padding:18px 24px;font-size:14px;margin-top:28px}
+.reset{background:none;border:1px solid var(--border);border-radius:10px;padding:10px 24px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--muted);cursor:pointer;letter-spacing:.08em;text-transform:uppercase;margin-top:28px}
+</style>
+</head>
+<body>
+<header>
+<div class="eyebrow">1985 Collective</div>
+<h1>Wedding Day<br><em>Shot List</em></h1>
+<div class="prog-wrap">
+<div class="ring-wrap">
+<svg class="ring" width="64" height="64" viewBox="0 0 64 64">
+<circle class="ring-bg" cx="32" cy="32" r="26"/>
+<circle class="ring-fill" id="rf" cx="32" cy="32" r="26"/>
+</svg>
+<div class="prog-pct" id="pp">0%</div>
+</div>
+<div class="prog-lbl" id="pl">0 shots captured</div>
+</div>
+<div class="legend">
+<div class="leg"><div class="dot" style="background:var(--pose)"></div>Posing</div>
+<div class="leg"><div class="dot" style="background:var(--tech)"></div>Technical</div>
+<div class="leg"><div class="dot" style="background:var(--pun)"></div>Pun</div>
+</div>
+</header>
+<div class="tabs" id="tabs"></div>
+<div id="pages"></div>
+<div class="footer">
+<div class="done-msg" id="dm">All shots captured. Beautiful work today.</div>
+<button class="reset" id="rb" onclick="resetAll()">Reset All</button>
+</div>
+<script>
+function item(t,po,te,pu){return{t:t,po:po,te:te,pu:pu||null}}
+var D=[
+{tab:"Getting Ready",cats:[
+{lbl:"Portraits",secs:[
+{em:"person_with_veil",ti:"Bride Portraits",items:[
+item("Bride in robe, natural window light","Stand close to window, chin slightly down, eyes toward light. Ask her to take a slow breath.","f/2.0-2.8, expose for skin, let window blow out slightly.","You look so good even the window is trying to frame you."),
+item("Bride getting hair done","Ask stylist to pause mid-motion. Have bride close eyes softly or look down at hands.","f/1.8-2.2. Watch for flyaways catching light.","Having a good hair day? More like a great hair day."),
+item("Bride getting makeup done","Capture lips being done, ask MUA to hold brush. For eyes, have bride look straight up.","85mm tight. Available light only, no flash on skin.","This is the only time it is acceptable to have someone in your face all morning."),
+item("Bride fully dressed, full length","Hands relaxed, slight weight shift to one hip. Ask her to walk toward you slowly and stop.","85mm or 50mm at f/2.0. Include train if present.","Walk toward me like you are late to your own wedding. Which technically you are."),
+item("Bride head and shoulders portrait","Chin forward and slightly down. Eyes directly into lens. One shoulder angled toward camera.","85mm f/1.8-2.0. Focus on closest eye.","Look at me like I just told you there is cake. Perfect. Hold that."),
+item("Bride looking out window","Side-on to window, look outside softly. Hands loosely in front.","Expose for face, not window. f/2.0, shoot from slightly behind.","Pretend you are in a movie. Which you are, directed by me."),
+item("Bride with bridesmaids","Loose cluster around bride, no stiff lines. Ask them to squeeze in and laugh together.","35mm or 50mm. f/2.8-4.0 to keep group sharp.","On the count of three, everybody pretend you like each other. One, two..."),
+item("Bride with mom","Ask mom to help adjust veil or dress. Capture the in-between moment.","Stay back, 85mm. Do not interrupt, observe and shoot.","Mom, tell her something embarrassing. Bride, try not to react.")
+]},
+{em:"man_in_tuxedo",ti:"Groom Portraits",items:[
+item("Groom in suit, full length","One hand in pocket, other relaxed. 3/4 angle to camera. Strong jaw, look just past lens.","85mm f/2.0. Clean background. Watch for jacket wrinkles.","You look like you could be on the cover of GQ. If GQ covered nervous grooms."),
+item("Groom head and shoulders portrait","Look off in distance first, then slowly bring eyes to camera. Natural confident expression.","85mm f/1.8. Focus on eyes. Slightly lower angle flatters men.","Look at me like I just told you the bar is open. There we go."),
+item("Groom adjusting tie or cufflinks","Ask him to adjust slowly. Capture hands in detail, rings, cufflinks.","85mm or macro. f/2.0-2.5, focus on hands.","Pretend you know what you are doing. Just like the rest of today."),
+item("Groom looking out window","Profile or 3/4 view. Ask him to think about the moment, genuine stillness.","Expose for face. Same approach as bride window shot.","Think about something peaceful. Like the fact that the planning is officially over."),
+item("Groom with best man or groomsmen","Relaxed poses, lean on wall, hands in pockets. Capture a toast or handshake moment.","35mm or 50mm. f/2.8. Look for candid laughs.","Alright gentlemen, look tough. Tougher. You all look like you are waiting for brunch."),
+item("Groom with dad","Handshake turning into a hug works well. Or side by side looking out window.","85mm. Let the moment happen naturally.","Dad, give him some advice. Something useful. Not about lawn care.")
+]}
+]},
+{lbl:"Details",secs:[
+{em:"ring",ti:"Flatlay and Details",items:[
+item("Full flatlay of all bridal items","Arrange largest items first, dress, shoes, bouquet. Build outward with consistent spacing.","Shoot directly overhead. f/4.0-5.6 for full sharpness. Natural light surface."),
+item("Ring close-up on ring dish","Angle dish slightly. Place ring so stones catch light. Add petals or ribbon.","Macro or 85mm. f/2.0-2.8. Watch for reflections in stones."),
+item("Shoes detail shot","Heel to heel, or one standing one lying. Add bouquet nearby.","Low angle. f/2.0 for dreamy background."),
+item("Invitation suite","Layer envelope behind card, add wax seal or florals. Clean straight lines.","Overhead or slight angle. f/4.0 for full text sharpness."),
+item("Jewelry close-ups","Lay on soft fabric, silk or linen. Space pieces so each reads clearly.","Macro ideal. f/2.8. Watch for reflections on metal."),
+item("Dress hanging, full length","Hang near window on ornate door, mirror, or clean wall. Fluff train.","Wide enough for full train. f/2.8-4.0. Backlight adds glow."),
+item("Dress detail, lace, buttons, train","Focus on most intricate section. Ask bride about her favorite dress detail.","Macro or 85mm tight. f/2.0. Let edges fall soft."),
+item("Bouquet close-up","Hold at waist or lay flat. Show flowers face-on and from side.","f/2.0-2.5. Focus on lead blooms. Soft natural light only."),
+item("Perfume and lipstick styled","Arrange with ribbon or small florals. Perfume standing, lipstick slightly angled.","f/2.0. Side window light creates nice shadows.")
+]}
+]},
+{lbl:"Candids",secs:[
+{em:"sparkles",ti:"Candid Moments",items:[
+item("Bridesmaids laughing together","Tell them a bad joke or ask them to recreate how the groom proposed.","35mm or 50mm. f/2.8. Continuous shooting mode.","Why did the bridesmaid sit on the bouquet? She wanted to be the next one to catch feelings."),
+item("Bride seeing herself in mirror","Position to capture both face and reflection. Do not direct, observe.","Include mirror frame in composition. f/2.0-2.8.","Mirror mirror on the wall, honestly, competition is over."),
+item("Mom or MOH zipping up dress","Step back and let it happen. Ask bride to look down during zip.","85mm from across room. f/2.0. Quiet and unobtrusive.","This is the only time it is socially acceptable to zip someone into their outfit."),
+item("Champagne toast","Raise glasses and look at each other, not camera. Capture clinking.","Continuous shooting. f/2.8. Watch for backlight on bubbles.","To the bride! May her day be long and her shoes be comfortable."),
+item("Bride receiving letter from groom","Do not interfere. Position for her face as she reads. Tissues ready.","85-135mm. f/2.0. Stay far back.","He actually wrote it himself. Probably rewrote it 12 times."),
+item("Quiet moment before leaving","Ask everyone to give bride 2 minutes alone. Capture her stillness.","Wide shot for room context, then tight on face. f/2.0.","The last 2 minutes of her old name. Make them count.")
+]}
+]}
+]},
+{tab:"Ceremony",cats:[
+{lbl:"Portraits",secs:[
+{em:"wedding",ti:"Processional and Altar",items:[
+item("Groom waiting at altar, full length","Capture him before he sees bride, hands clasped, looking down aisle. Natural anticipation.","85mm from side or slight angle. f/2.0. Use aisle as leading line.","He has been standing here for 3 minutes. He is either in love or his shoes hurt."),
+item("Groom reaction as bride walks in","Pre-focus on groom face before bride enters. Do not miss this shot.","Stay on groom. 85mm. Continuous AF. f/2.0-2.8.","Watch his face. That expression is why we do this job."),
+item("Bride walking down aisle with escort","Shoot from altar end, bride walking toward you. Side for escort hand detail.","85mm from front. f/2.8. Watch aisle lighting, lift ISO if needed.","The longest and shortest walk of her life, all at once."),
+item("Bride and groom face to face at altar","Capture both profiles, position at 45 degrees from altar side.","85mm. f/2.0-2.5. Expose for faces, not bright window behind.","They are looking at each other like nobody else exists. Because right now, nobody does."),
+item("Ring exchange, close-up of hands","Get as close as officiant allows. Focus on the moment the ring slides on.","Move to side for hand angle. f/2.0 macro or 85mm tight.","The most expensive game of ring toss you will ever photograph."),
+item("First kiss","Pre-focus. Be ready before you may kiss. Capture dip if they do one.","Continuous shooting. f/2.8. Second angle if possible.","Everyone has been waiting for this. Especially the groom."),
+item("Recessional, couple walking back","Position at end of aisle. Couple coming toward you, guests reacting behind.","35mm or 50mm. f/2.8. Include guests blurred in background.","They came in as two people and they are leaving as one unit. And now the party starts.")
+]}
+]},
+{lbl:"Details",secs:[
+{em:"cherry_blossom",ti:"Ceremony Details",items:[
+item("Venue, wide establishing shot","Before guests arrive. Capture full space, altar, seating, florals.","Wide 24-35mm. f/5.6-8.0. Tripod if low light."),
+item("Altar or arch decoration detail","Shoot through florals for dreamy foreground blur.","85mm f/2.0. Use florals as foreground element."),
+item("Florals and centerpieces","Get low and shoot up slightly. Include background context softly.","f/2.0-2.5. Focus on closest blooms."),
+item("Programs or signage","Lay program flat on pew or stand with florals nearby.","f/4.0 for text sharpness. Even, soft light."),
+item("Rings on bible or pillow","Stack rings or place side by side. Add florals for color.","Macro or 85mm tight. f/2.0. Watch reflections."),
+item("Candles or ceremony lighting","Shoot through candle clusters with subject behind.","f/1.8-2.0. High ISO if needed. Let candles slightly overexpose.")
+]}
+]},
+{lbl:"Candids",secs:[
+{em:"sob",ti:"Emotional Moments",items:[
+item("Parents reactions during processional","Watch mother of bride especially. Position near front row before processional.","85mm from aisle. f/2.0. Be ready before bride reaches them.","Dads who said they were not going to cry: currently crying."),
+item("Guests wiping tears","Scan rows during vows. Move quietly. Look for genuine reactions.","135mm if available. f/2.0. Silent shutter if possible.","Who gave out onions? Nobody? Just the vows then."),
+item("Flower girl or ring bearer walking","Get low, their level. Capture personality. Shoot fast.","35-50mm. f/2.8. Burst mode.","50% adorable, 50% chaos, 100% unpredictable. Stay on burst."),
+item("Wedding party reactions at altar","During vows, pan slowly across wedding party faces. Candid reactions.","85mm from angle. f/2.0-2.5.","The maid of honor is already crying. The best man is pretending he is not."),
+item("Couple laughing during vows","Stay ready, often happens during personal vows. Do not anticipate, just react.","Continuous shooting. f/2.0.","The best vows always have at least one inside joke nobody else understands."),
+item("Wide shot of full congregation","From back or elevated position. Shows full scale of ceremony.","24-35mm. f/5.6-8.0. Include altar in frame.","Everyone dressed their best and showed up. That is love right there.")
+]}
+]}
+]},
+{tab:"Family",cats:[
+{lbl:"Portraits",secs:[
+{em:"family",ti:"Family Formals",items:[
+item("Bride and groom alone, full length","Groom behind bride, hands on waist. Both angled slightly, not square to camera.","85mm f/2.0. Clean background. Check for distractions.","The power couple has entered the chat."),
+item("Bride with her parents","Bride center, parents on each side. Slight lean in. Ask for a real hug.","50-85mm. f/2.8. Even light across all three faces.","The people who made today possible. In every sense."),
+item("Bride with mom only","Holding hands or forehead to forehead. Let emotion happen naturally.","85mm f/2.0. Tight crop. Focus on faces.","She learned everything she knows about love from this woman."),
+item("Bride with dad only","Classic arm-in-arm. Capture a quiet moment, dad looking at bride.","85mm f/2.0. Watch dad expression especially.","He practiced this walk for weeks but nothing prepared him for the real thing."),
+item("Groom with his parents","Groom center, relaxed arms around parents.","50-85mm f/2.8.","The people who raised him well enough that she said yes."),
+item("Groom with mom only","Hug or hands held. Mom looking up at groom works beautifully.","85mm f/2.0.","She has been waiting for this day almost as long as the bride has."),
+item("Groom with dad only","Handshake or side-by-side. Ask dad to put arm around groom shoulder.","85mm f/2.0.","Two generations of good taste in suits."),
+item("Both families together","Largest group, arrange by height. Check everyone is visible.","35-50mm. f/4.0-5.6. Step back for full group.","Two families becoming one. Herding cats has never looked this elegant."),
+item("Bride and groom with all siblings","Relaxed, no strict lines. Suggest a group hug or pile-in.","35-50mm. f/2.8-4.0.","The people who know all the embarrassing stories and love them anyway."),
+item("Bride and groom with grandparents","Grandparents seated if needed. Couple kneeling or crouching to their level.","50mm. f/2.8. Be quick, limit standing time.","These two have forgotten more about marriage than we will ever know."),
+item("Full wedding party, wide shot","Groomsmen one side, bridesmaids other. Couple center elevated if possible.","35mm. f/4.0-5.6. Check all faces visible.","The squad. The legend. The people who survived the group chat."),
+item("Bridesmaids only","Loose and fun, bouquets up, laugh together. Also do a formal.","50mm f/2.8. Step back for full group.","Ladies who collectively spent a lot on dresses they were told they would wear again."),
+item("Groomsmen only","Arms crossed or hands in pockets. Relaxed and strong. Capture a funny one too.","50mm f/2.8-4.0.","Gentlemen, look like you know what you are doing. Now one where you do not."),
+item("Bride with bridesmaids","Bouquets at waist. Bride slightly forward. Tight cluster.","50mm f/2.8.","Her real ones. The group text that never sleeps."),
+item("Groom with groomsmen","Walking toward camera, cinematic feel.","35mm f/2.8. Low angle for drama.","Walking like they own the place. Today, they do.")
+]}
+]},
+{lbl:"Details",secs:[
+{em:"bouquet",ti:"Group Details",items:[
+item("Bouquets grouped together","All bridesmaids hold bouquets close together overhead or in a cluster. Shoot from above.","Overhead. f/4.0. Colorful and graphic."),
+item("Boutonnieres close-up","Groomsmen in a line, focus on chest details. Or isolate one on groom.","85mm f/2.0-2.5. Clean jacket background."),
+item("Wedding party shoes lineup","All in a row, mix bride heels with groomsmen shoes for contrast.","Low angle. f/2.8-4.0. Leading line composition.")
+]}
+]},
+{lbl:"Candids",secs:[
+{em:"rolling_on_the_floor_laughing",ti:"In-Between Moments",items:[
+item("Candid laughter between poses","Tell a terrible pun between setups. Genuine reactions are gold.","35-50mm. f/2.8. Continuous mode.","Why do scientists not trust atoms? Because they make up everything. Like wedding toasts."),
+item("Kids running or playing","Get low, their level. Capture joy and chaos.","35mm f/2.8. Fast shutter 1/500+. Burst mode.","The only guests who are 100% themselves all day. Respect."),
+item("Grandparents together","Holding hands or sharing a quiet moment. Do not over-direct.","85mm f/2.0. Stay back and observe.","Decades of love in one frame. This is what we are shooting toward."),
+item("Siblings goofing around","Capture the in-between, adjusting ties, whispering, teasing each other.","35-50mm f/2.8. Be unobtrusive.","The people legally required to love you even when you are annoying.")
+]}
+]}
+]},
+{tab:"Couples",cats:[
+{lbl:"Portraits",secs:[
+{em:"dancer",ti:"Three-Quarter Poses",items:[
+item("3/4 Classic angle, groom behind bride","Groom stands slightly behind, hands on bride waist. Both look at camera at slight 3/4 angle. Chin out, weight on back foot.","85mm f/2.0. Classic and clean. Watch for groom hands overlapping awkwardly.","You two look like a movie poster. I am calling it: best picture."),
+item("3/4 Bride looking back over shoulder","Groom faces camera, bride turned away slightly and looks back over shoulder toward him. Creates elegant line through body.","85mm f/2.0. Shoot from slightly to groom side. Focus on bride face.","The just one more look pose. Classic for a reason."),
+item("3/4 Hands clasped, both looking down","Stand side by side, clasp hands between them. Both look down at hands. Intimate and tender.","85mm f/2.0. Shoot slightly above. Include both faces softly.","They are both thinking do not drop the ring. The ring is already on."),
+item("3/4 Forehead touch, eyes closed","Touch foreheads, close eyes, take a breath. Leave 10 seconds of silence before shooting.","85mm f/1.8. Very tight. Focus on point of contact.","This is the pose where even the camera feels like it is interrupting something private."),
+item("3/4 Bride leaning into groom chest","Bride leans back into groom chest, his arms wrapped around her from behind. Both can look at camera or away.","85mm f/2.0. Shoot from slightly in front. Watch both faces are visible.","He is her human backrest for the rest of their lives. Romantic."),
+item("3/4 Groom whispering in bride ear","Groom leans in to whisper something, ask him to say something sweet or funny. Capture her genuine reaction.","85mm f/2.0. Focus on bride face and expression. Shoot continuously.","Tell her what you love about her. Then tell her again for the camera."),
+item("3/4 Couple looking in same direction","Side by side, both looking off in the same direction. Contemplative, cinematic. Groom hand in bride hand.","85mm f/2.0. Position so faces catch light. Strong environmental context.","Looking toward their future. Which includes a lot of dishes and Netflix."),
+item("3/4 Nose-to-nose almost kiss","Foreheads and noses touching, mouths close but not kissing. Eyes can be open or closed. Tension is beautiful.","85mm f/1.8. Get close. Razor sharp on eyes if open.","The almost-kiss. More tension than the actual kiss. Shoot in burst."),
+item("3/4 Groom lifting bride hand to kiss","Groom takes bride hand, lifts it gently to lips. Bride looks at him with soft eyes. Timeless and romantic.","85mm f/2.0. Focus on the hand and groom face. Capture bride reaction too.","Chivalry is alive and on your SD card."),
+item("3/4 Both laughing, heads together","Ask them to tell each other their worst wedding joke. Genuine laugh, heads naturally come together.","85mm f/2.0. Continuous shooting. The mid-laugh frame is the one.","Why was the wedding cake so expensive? It was in tiers. Watch their reaction.")
+]},
+{em:"standing_person",ti:"Full Body Poses",items:[
+item("Full body Walking toward camera","Walk slowly side by side, talking to each other, not the camera. Natural movement, genuine connection.","35-50mm. f/2.0-2.8. Pan slightly with them as they move.","Walk like you just got married. Which you did. Look at you go."),
+item("Full body Walking away, rear view","Walk away holding hands. Do not look back. Include full train and environment.","35-50mm f/2.0. Step back for environment context. Train in frame.","The beginning of the rest of their lives. And a great dress rear shot."),
+item("Full body Dip pose","Groom right hand on her back, left takes her hand. Dip on exhale. Warn them first, count to three.","Wide enough for full extension. f/2.8. Fast shutter 1/500+ for sharpness.","On three. One, two, dip! Do not drop her. That would be a different kind of photo."),
+item("Full body Twirl pose","Groom holds her hand up, she spins under it. Capture the spin AND the moment she faces him again.","35mm. f/2.8. Burst mode. The look after the twirl is the shot.","Spin her! Capture the dress in full flight. It has been waiting for this moment all day."),
+item("Full body Couple under arch or doorway","Use venue architecture as a natural frame. Couple close together inside the frame.","35mm. f/2.8. Include full arch. Step back to show full framing.","Nature and architecture conspired to frame these two perfectly. Take the hint."),
+item("Full body Running toward camera","Start 30 feet back, run toward camera laughing and holding hands. Not posed, pure energy.","35mm. f/4.0. Fast shutter 1/1000+. Burst mode. Get several passes.","Run! It is just for the photo. Unless they keep going, then it is an elopement sequel."),
+item("Full body Sitting on ground or steps","Find steps, ground, or bench. Groom legs out, bride leaning into him. Relaxed, real, unhurried.","Get low, eye level with them. 85mm f/2.0. Include environment.","The most expensive outfit either of them has ever worn, sitting on the ground. Beautiful."),
+item("Full body Silhouette against sky or window","Position against bright sky or window. Have them kiss or touch foreheads for distinctive shape.","Expose for sky, faces become silhouette. f/8.0-11. Shoot slightly upward.","Two people, one shadow, infinite potential."),
+item("Full body Groom carrying bride","Classic carry, bridal style. Ask bride to throw head back laughing for a natural joyful version.","35-50mm. f/2.8. Capture full body including feet. Fast shutter.","Technically practice for the threshold. Also a great workout for the groom."),
+item("Full body Golden hour wide shot","Couple small in frame, environment tells the story. Place them at natural thirds. Sun behind them.","24-35mm. f/5.6-8.0. Expose for sky. Couple lit by reflected light.","The whole world in one frame, and they are the center of it. Because today they are.")
+]},
+{em:"pinching_hand",ti:"Tight Intimate Poses",items:[
+item("Intimate Eyes only, extreme close-up","Shoot tight on just their eyes, both open, looking at each other or camera. Include lashes, brows, emotion.","85mm or macro. f/2.0. Razor sharp on iris. Very still.","Eyes that have looked at each other every day and still find something new."),
+item("Intimate Hands intertwined, rings visible","Both hands clasped together, both rings showing. Soft relaxed grip, not stiff.","Macro or 85mm. f/2.0. Side light to show ring depth and texture.","The world most photographed accessory, on the world most important hands."),
+item("Intimate Bride hand on groom chest","Bride places hand flat on groom chest. Both look down at it or bride looks up at him. Tender and quiet.","85mm f/2.0. Focus on hand and face relationship. Soft light.","Hand on heart. Literally. That is the whole beautiful point."),
+item("Intimate Lips almost touching","Mouths close, almost kissing, tension held. Eyes can be open or closed. Slow exhale.","85mm f/1.8. Shoot in burst, they will eventually actually kiss.","Almost. Almost. There it is. Got it."),
+item("Intimate Groom hand on bride face","Groom cups bride face gently with one hand. She leans into it. Eyes closed or looking at each other.","85mm f/1.8-2.0. Very tight. Focus on the touch and nearest eye.","The most gentle gesture. The one that will make her mom cry at the viewing."),
+item("Intimate Veil over both faces","Drape veil gently over both faces while they are close together. Ethereal and soft.","85mm f/2.0. Shoot through veil fabric. Soft dreamy result.","Behind the veil. The world disappears. It is just the two of them."),
+item("Intimate Noses touching, side profile","Side profile of both, noses just touching, foreheads close. Strong graphic composition.","85mm. f/2.0. Shoot from directly to the side. Clean background.","The profile shot that looks like a coin they would put on a commemorative quarter."),
+item("Intimate Groom hand around bride waist from behind","His hand at the small of her back, her hand placed over his. Both looking forward or she turns slightly.","85mm f/2.0. Focus on the hands. Faces softly in background.","A hand on the small of the back. The universal language of I have got you."),
+item("Intimate Forehead kiss","Groom kisses bride forehead while she closes her eyes and leans in. Pure tenderness.","85mm f/1.8. Focus on bride face. Capture both in frame.","The forehead kiss. Reserved only for the people we love most. Get it before they move."),
+item("Intimate Both eyes closed, just breathing","Ask them to close eyes, touch, and just breathe together for 30 seconds. Do not speak. Then shoot.","85mm f/1.8. Very quiet. Let the moment settle before you shoot.","The world stops for 30 seconds. Shoot in it.")
+]}
+]},
+{lbl:"Details",secs:[
+{em:"sunrise",ti:"Couple Detail Shots",items:[
+item("Rings together on natural surface","Both rings placed together on wood, stone, petals, or bark. Look for texture and color contrast.","Macro or 85mm. f/2.0-2.8. Side natural light. Watch for reflections in stones."),
+item("Bouquet detail with dress fabric","Lay bouquet partially on dress fabric or against the train. Let flowers and lace interact.","85mm f/2.0. Natural light overhead or window. f/2.5 for soft dress background."),
+item("Bride shoes on venue surface","Place shoes on an interesting surface, wooden floor, cobblestone, grass, marble. One standing, one slightly tipped.","Low angle. 50-85mm. f/2.0. Let venue texture tell the location story."),
+item("Veil in motion, wind or movement","Ask bride to toss veil up gently or find natural wind. Capture the float and movement.","Fast shutter 1/1000+. f/2.8. Burst mode. Look for clean sky or dark background behind."),
+item("Groom boutonniere close-up on lapel","Shoot tight on lapel detail, boutonniere, pocket square if present, suit texture.","Macro or 85mm f/2.0. Shoot from slightly above or straight on. Clean light.")
+]}
+]},
+{lbl:"Candids",secs:[
+{em:"heart",ti:"Authentic Moments",items:[
+item("First look reaction","Tap groom shoulder when bride approaches. Stay on his face until he turns.","Two angles if possible. 85mm each. Pre-focus and wait.","He has seen her a thousand times. He has never seen her like this."),
+item("Couple reading vows privately","Step back. Let them have the moment. Capture shaking hands, forming tears.","85-135mm. f/2.0. Silent and still.","Private vows, publicly photographed. Tastefully."),
+item("Spontaneous kiss","After a laugh or emotional moment, they often kiss naturally. Be ready always.","Always ready between poses. f/2.0. Continuous AF on.","The unplanned kiss is always better than the planned one."),
+item("Couple whispering to each other","Between shots, do not always call cut, keep shooting while they relax.","85mm f/2.0. Candid distance. Do not interrupt.","Whatever they are saying, it is between them. Your job is to document the smile it causes."),
+item("Bride fixing groom tie or boutonniere","Ask bride to check groom tie before portrait session, capture the domestic tenderness.","35-50mm. f/2.0-2.8. Close and intimate framing.","A preview of 50 years of fixing his collar before he walks out the door.")
+]}
+]}
+]},
+{tab:"Reception",cats:[
+{lbl:"Portraits",secs:[
+{em:"woman_dancing",ti:"Key Moments",items:[
+item("Grand entrance, couple walking in","Position at end of entrance path. Couple mid-stride, joy on faces.","35mm. f/2.8. High ISO for indoor. Fast shutter 1/250+.","Ladies and gentlemen, for the first time as a married couple, they have entered the building."),
+item("First dance, wide shot","Full dance floor and couple together. Include guests watching.","35mm f/2.8. Expose for couple, let edges fall dark.","They practiced this. Probably once. It is going to be perfect anyway."),
+item("First dance, close-up of faces","Move in when they slow down. Look for whisper or forehead touch.","85mm f/2.0. Focus on faces. 1/160+ to prevent blur.","The song they will never hear the same way again for the rest of their lives."),
+item("Father-daughter dance","Capture dad face especially. Also bride looking at him.","85mm f/2.0. Same as first dance approach.","He has been dreading this song for 20 years. Now he never wants it to end."),
+item("Mother-son dance","Mom looking up at groom, powerful image. Watch for tears.","85mm f/2.0.","She knew he would be this tall someday. She just did not think it would happen this fast."),
+item("Couple during cake cutting","Close for hand-over-hand cutting. Then step back for the feed.","50mm f/2.8. Be ready for the smash, it happens fast.","The one moment of the day where it is acceptable to put food in someone face."),
+item("Bouquet toss","Shoot from behind bride facing crowd. Also capture winner reaction.","35mm f/2.8. Fast shutter. Burst mode.","Chaos in floral form. Stay on burst and pray."),
+item("Couple last dance or exit","For exit, line both sides, couple running through. Backlight sparklers.","35mm. High ISO. f/2.8. Fast shutter for sparkler light trail.","They arrived as guests. They leave as legends.")
+]}
+]},
+{lbl:"Details",secs:[
+{em:"candle",ti:"Reception Details",items:[
+item("Table settings, wide overhead","Before guests arrive. Center table in frame. Include all place settings.","Wide lens from highest point available. f/5.6."),
+item("Centerpieces close-up","Shoot through candles or adjacent florals for depth.","85mm f/2.0. Candles in foreground create warmth."),
+item("Wedding cake, full shot","Before cutting. Include topper and floral details.","50mm f/2.8-4.0. Even light, watch for harsh shadows."),
+item("Cake detail, flowers, topper","Move in close on most intricate tier.","Macro or 85mm. f/2.0-2.5."),
+item("Seating chart or signage","Include florals or venue context in background.","50mm f/2.8. Ensure text readable, f/4.0 if needed."),
+item("Favors or place cards","Arrange a small cluster, do not shoot the whole table scatter.","85mm f/2.0. Tight and styled."),
+item("Sweetheart table setup","Before couple sits, include chairs, florals, full table detail.","35-50mm f/2.8. Wide enough for both chairs."),
+item("Dance floor lighting","Look for light patterns on empty or full dance floor.","Wide angle. High ISO. f/2.8. Long exposure for light trails if empty.")
+]}
+]},
+{lbl:"Candids",secs:[
+{em:"tada",ti:"Party Moments",items:[
+item("Toasts, speaker and couple reaction","Split attention: speaker wide, then swing to couple face at key moments.","Two bodies ideal. 35mm on speaker, 85mm on couple.","The best toasts make the couple laugh AND cry. Aim for both."),
+item("Guests dancing","Get low, shoot up into dancers. Arms raised, expressions of joy.","35mm f/2.8. High ISO. Fast shutter. Wide open.","This is what the open bar was for. Shoot accordingly."),
+item("Couple sneaking a private moment","If you spot them stepping away, follow quietly. Do not interrupt.","85mm from distance. f/2.0. Available light only.","They snuck away. Follow them. Quietly. This is the shot."),
+item("Kids on dance floor","Get to their level. Let them perform.","35mm f/2.8. Fast shutter 1/500+. Burst mode.","No self-consciousness. No inhibitions. Pure joy. These kids get it."),
+item("Older guests dancing","These are often the most joyful shots. Watch for couples married 40+ years.","35-50mm f/2.8. Be unobtrusive and patient.","The couples who have been doing this for 50 years. Watch and learn."),
+item("Friends laughing at table","Slightly above table level. Capture full group reaction.","35mm f/2.8. Include table details in foreground.","This is what they came for. The laughing, the stories, each other."),
+item("Couple watching guests enjoy themselves","Find the moment they step back and take it all in. Pure contentment.","85mm from across room. f/2.0. Do not interrupt.","They planned all of this for the people they love. Watch them watch it work.")
+]}
+]}
+]}
+];
+
+var state={},total=0;
+D.forEach(function(pg){pg.cats.forEach(function(c){c.secs.forEach(function(s){s.items.forEach(function(it){state[pg.tab+s.ti+it.t]=false;total++;});});});});
+
+function upd(){
+var n=Object.values(state).filter(Boolean).length;
+var p=Math.round(n/total*100);
+document.getElementById(“rf”).style.strokeDashoffset=163-(p/100)*163;
+document.getElementById(“pp”).textContent=p+”%”;
+document.getElementById(“pl”).textContent=n+” of “+total+” shots captured”;
+document.getElementById(“dm”).style.display=p===100?“block”:“none”;
+document.getElementById(“rb”).style.display=p===100?“none”:“inline-block”;
+D.forEach(function(pg){pg.cats.forEach(function(c){c.secs.forEach(function(s){var d=s.items.filter(function(it){return state[pg.tab+s.ti+it.t];}).length;var el=document.getElementById(“c”+pg.tab+s.ti);if(el)el.textContent=d+”/”+s.items.length;});});});
+}
+
+function toggle(key,el){state[key]=!state[key];el.classList.toggle(“done”,state[key]);upd();}
+function toggleSec(id){document.getElementById(id).classList.toggle(“closed”);}
+function switchTab(i){document.querySelectorAll(”.tab”).forEach(function(t,j){t.classList.toggle(“active”,j===i);});document.querySelectorAll(”.page”).forEach(function(p,j){p.classList.toggle(“active”,j===i);});}
+function resetAll(){Object.keys(state).forEach(function(k){state[k]=false;});document.querySelectorAll(”.item”).forEach(function(el){el.classList.remove(“done”);});upd();}
+
+var tabsEl=document.getElementById(“tabs”);
+D.forEach(function(pg,i){
+var b=document.createElement(“button”);
+b.className=“tab”+(i===0?” active”:””);
+b.textContent=pg.tab;
+b.addEventListener(“click”,function(){switchTab(i);});
+tabsEl.appendChild(b);
+});
+
+var pgsEl=document.getElementById(“pages”);
+D.forEach(function(pg,i){
+var pgEl=document.createElement(“div”);
+pgEl.className=“page”+(i===0?” active”:””);
+var con=document.createElement(“div”);
+con.className=“content”;
+pg.cats.forEach(function(c){
+var cl=document.createElement(“div”);
+cl.className=“cat-lbl”;
+cl.textContent=c.lbl;
+con.appendChild(cl);
+c.secs.forEach(function(s){
+var sid=“s”+pg.tab+s.ti;
+var se=document.createElement(“div”);
+se.className=“sec”;
+se.id=sid;
+var sh=document.createElement(“div”);
+sh.className=“sec-head”;
+sh.innerHTML=”<div class='sec-title'><span class='sec-emoji'>”+s.em+”</span><span class='sec-name'>”+s.ti+”</span></div><div class='sec-meta'><span class='sec-count' id='c"+pg.tab+s.ti+"'>0/”+s.items.length+”</span><span class='sec-arrow'>›</span></div>”;
+sh.addEventListener(“click”,function(){toggleSec(sid);});
+var ie=document.createElement(“div”);
+ie.className=“sec-items”;
+s.items.forEach(function(it){
+var key=pg.tab+s.ti+it.t;
+var d=document.createElement(“div”);
+d.className=“item”;
+var ph=””;
+if(it.po)ph+=”<div class='prompt pose'><span class='ptag'>Pose</span>”+it.po+”</div>”;
+if(it.te)ph+=”<div class='prompt tech'><span class='ptag'>Tech</span>”+it.te+”</div>”;
+if(it.pu)ph+=”<div class='prompt pun'><span class='ptag'>Pun</span>”+it.pu+”</div>”;
+d.innerHTML=”<div class='chk'><svg class='checkmark' viewBox='0 0 11 11' fill='none'><path d='M1.5 5.5l3 3 5-5' stroke='#0f0f0f' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg></div><div class='item-text'><div class='item-lbl'>”+it.t+”</div><div class='prompts'>”+ph+”</div></div>”;
+d.addEventListener(“click”,function(){toggle(key,d);});
+ie.appendChild(d);
+});
+se.appendChild(sh);
+se.appendChild(ie);
+con.appendChild(se);
+});
+});
+pgEl.appendChild(con);
+pgsEl.appendChild(pgEl);
+});
+upd();
+</script>
+
+</body>
+</html>
