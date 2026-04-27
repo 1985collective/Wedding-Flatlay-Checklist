@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="out">Loading...</div>
+<script>
+var D = [{tab:"Test",cats:[{lbl:"A",secs:[{em:"x",ti:"Section 1",items:[{t:"Item 1",po:"Pose",te:"Tech",pu:null}]}]}]}];
+var total = 0;
+D.forEach(function(pg){pg.cats.forEach(function(c){c.secs.forEach(function(s){s.items.forEach(function(it){total++;});});});});
+document.getElementById("out").innerHTML = "Total items: " + total + " — Data works!";
+</script>
+</body>
+</html>
