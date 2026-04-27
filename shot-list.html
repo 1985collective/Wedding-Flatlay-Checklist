@@ -362,7 +362,7 @@ var ph=””;
 if(it.po)ph+=”<div class='prompt pose'><span class='ptag'>Pose</span>”+it.po+”</div>”;
 if(it.te)ph+=”<div class='prompt tech'><span class='ptag'>Tech</span>”+it.te+”</div>”;
 if(it.pu)ph+=”<div class='prompt pun'><span class='ptag'>Pun</span>”+it.pu+”</div>”;
-d.innerHTML=”<div class='chk'><svg class='checkmark' viewBox='0 0 11 11' fill='none'><path d='M1.5 5.5l3 3 5-5' stroke='#0f0f0f' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg></div><div class='item-text'><div class='item-lbl'>”+it.t+”</div><div class='prompts'>”+ph+”</div></div>”;
+d.innerHTML=”<div class='chk'><svg class='checkmark' viewBox='0 0 11 11' fill="none"><path d='M1.5 5.5l3 3 5-5' stroke="#0f0f0f" stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg></div><div class='item-text'><div class='item-lbl'>”+it.t+”</div><div class='prompts'>”+ph+”</div></div>”;
 d.addEventListener(“click”,function(){toggle(key,d);});
 ie.appendChild(d);
 });
